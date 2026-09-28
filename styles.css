@@ -113,7 +113,7 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 .profiles svg { width: 18px; height: 18px; fill: currentColor; }
 
 .hero__portrait {
-  position: relative; margin: 0; justify-self: end; width: min(340px, 100%); aspect-ratio: 4 / 5;
+  position: relative; margin: 0; justify-self: end; width: min(320px, 100%); aspect-ratio: 1 / 1;
   border-radius: 24px; overflow: hidden;
   background: linear-gradient(160deg, rgba(255, 255, 255, .1), rgba(255, 255, 255, .02));
   border: 1px solid rgba(255, 255, 255, .14);

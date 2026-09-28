@@ -6,14 +6,14 @@ A static site made of three files. There is no build step and nothing to install
 index.html     all page content
 styles.css     design
 script.js      navigation, publication filter, animated hero background
-assets/        put photo.jpg and Balaji_Senapati_CV.pdf here
+assets/        photo.jpeg and Balaji_Senapati_CV.pdf
 ```
 
 To preview the site, double-click `index.html`.
 
 ## Before publishing
 
-1. **Photo:** save a portrait as `assets/photo.jpg`. A 4:5 crop of at least 800×1000 px works best. Until it exists, a "BS" monogram is shown.
+1. **Photo:** `assets/photo.jpeg`, shown in a square frame. To replace it, keep the same file name and use a square image of at least 700×700 px so it stays sharp on high-resolution screens. If the file is missing, a "BS" monogram is shown.
 2. **CV:** in Word, go to *File → Save As → PDF* and save it as `assets/Balaji_Senapati_CV.pdf`. The "Download CV" button links to this file and stays hidden on the live site until the file exists. The CV includes your referees' email addresses, so you may want to remove that section from the public copy.
 
 ## Publish free on GitHub Pages
