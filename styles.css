@@ -181,8 +181,6 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 
 .subblock { margin-top: 56px; }
 .subhead { font-family: var(--serif); font-size: 1.3rem; font-weight: 500; margin-bottom: 1rem; }
-.list-compact li { display: grid; grid-template-columns: 56px 1fr; gap: 12px; padding: 9px 0; border-bottom: 1px solid var(--line); font-size: .93rem; color: var(--ink-soft); }
-.list-compact span { font-weight: 600; color: var(--muted); }
 
 /* ---------------- TALKS ---------------- */
 .events li { display: grid; grid-template-columns: 86px 1fr; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--line); }
