@@ -13,6 +13,16 @@
       .catch(() => {});
   }
 
+  // Total visitors from GoatCounter, shown in the footer once there are any
+  fetch('https://senapatibalaji.goatcounter.com/counter/TOTAL.json')
+    .then(r => r.ok ? r.json() : Promise.reject())
+    .then(d => {
+      if (!d.count || d.count === '0') return;
+      document.getElementById('visits').textContent = d.count;
+      document.querySelector('.footer__visits').hidden = false;
+    })
+    .catch(() => {});
+
   // ---------- Navigation ----------
   const onScroll = () => nav.classList.toggle('is-scrolled', window.scrollY > 40);
   onScroll();
