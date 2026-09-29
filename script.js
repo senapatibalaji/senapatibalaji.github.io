@@ -13,8 +13,11 @@
       .catch(() => {});
   }
 
-  // Total visitors from GoatCounter, shown in the footer once there are any
-  fetch('https://senapatibalaji.goatcounter.com/counter/TOTAL.json')
+  // Total visitors from GoatCounter, shown in the footer once there are any.
+  // GoatCounter's cached total can go stale for hours; asking for the total up
+  // to tomorrow's date gives a new cache entry each day, so it updates daily.
+  const tomorrow = new Date(Date.now() + 864e5).toISOString().slice(0, 10);
+  fetch('https://senapatibalaji.goatcounter.com/counter/TOTAL.json?end=' + tomorrow)
     .then(r => r.ok ? r.json() : Promise.reject())
     .then(d => {
       if (!d.count || d.count === '0') return;
