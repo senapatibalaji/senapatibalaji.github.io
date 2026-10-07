@@ -4,6 +4,7 @@ A static site made of three files. There is no build step and nothing to install
 
 ```
 index.html     all page content
+tipmip.html    TIPMIP ocean simulations page (linked from the AMOC research theme)
 styles.css     design
 script.js      navigation, publication filter, animated hero background
 assets/        photo.jpeg and Balaji_Senapati_CV.pdf

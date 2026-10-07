@@ -27,7 +27,9 @@
     .catch(() => {});
 
   // ---------- Navigation ----------
-  const onScroll = () => nav.classList.toggle('is-scrolled', window.scrollY > 40);
+  // Pages without the dark hero keep the solid navigation bar
+  const hasHero = !!document.querySelector('.hero');
+  const onScroll = () => nav.classList.toggle('is-scrolled', !hasHero || window.scrollY > 40);
   onScroll();
   window.addEventListener('scroll', onScroll, { passive: true });
 
@@ -78,6 +80,7 @@
   // A south-polar view with latitude rings, anomaly lobes and contours
   // shaped by a zonal wavenumber-4 wave that slowly travels eastward.
   const canvas = document.getElementById('wave');
+  if (!canvas) return;
   const ctx = canvas.getContext('2d');
   let W, H, cx, cy, R, dpr;
 

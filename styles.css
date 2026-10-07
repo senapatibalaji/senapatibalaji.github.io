@@ -244,6 +244,17 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 .footer p { margin: 0; }
 .footer a { color: #b8c7d8; }
 
+/* ---------------- SUBPAGES ---------------- */
+.page-head { padding: 140px 0 0; }
+.page-head h1 { font-family: var(--serif); font-weight: 500; font-size: clamp(2.2rem, 4.5vw, 3.2rem); letter-spacing: -.02em; margin-bottom: 1.25rem; }
+.page-head .prose { max-width: 760px; }
+.back-link { display: inline-block; font-weight: 600; font-size: .9rem; margin-bottom: 2rem; }
+.runs { grid-template-columns: repeat(3, 1fr); }
+.run__id { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .85rem !important; color: var(--ocean) !important; margin-bottom: .5rem; }
+.facts { display: grid; grid-template-columns: auto 1fr; gap: 6px 16px; margin: 1rem 0 1.25rem; font-size: .9rem; }
+.facts dt { color: var(--muted); }
+.facts dd { margin: 0; color: var(--ink); }
+
 /* ---------------- REVEAL ---------------- */
 .reveal { opacity: 0; transform: translateY(16px); transition: opacity .7s ease, transform .7s ease; }
 .reveal.is-visible { opacity: 1; transform: none; }
