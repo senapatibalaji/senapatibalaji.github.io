@@ -1,10 +1,11 @@
 # Personal website: Balaji Senapati
 
-A static site made of three files. There is no build step and nothing to install.
+A static site of plain HTML, CSS and JavaScript files. There is no build step and nothing to install.
 
 ```
-index.html     all page content
+index.html     main page (most content lives here)
 tipmip.html    TIPMIP ocean simulations page (linked from the AMOC research theme)
+sintex-f2.html SINTEX-F2 simulations and linear models (linked from the wavenumber-4 theme)
 styles.css     design
 script.js      navigation, publication filter, animated hero background
 assets/        photo.jpeg and Balaji_Senapati_CV.pdf

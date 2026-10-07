@@ -255,6 +255,15 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 .facts { display: grid; grid-template-columns: auto 1fr; gap: 6px 16px; margin: 1rem 0 1.25rem; font-size: .9rem; }
 .facts dt { color: var(--muted); }
 .facts dd { margin: 0; color: var(--ink); }
+.table-wrap { overflow-x: auto; }
+.exp-table { width: 100%; border-collapse: collapse; font-size: .95rem; }
+.exp-table th { text-align: left; font-size: .75rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); padding: 0 16px 12px 0; border-bottom: 2px solid var(--ink); }
+.exp-table td { padding: 14px 16px 14px 0; border-bottom: 1px solid var(--line); color: var(--ink-soft); vertical-align: top; }
+.exp-table td:first-child { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .88rem; color: var(--ocean); white-space: nowrap; }
+.exp-table td:last-child { white-space: nowrap; }
+.callout { background: var(--ocean-soft); border-radius: var(--radius); padding: 40px; }
+.callout h2 { margin-bottom: .75rem; }
+.callout p { color: var(--ink-soft); max-width: 640px; margin-bottom: 1.5rem; }
 
 /* ---------------- REVEAL ---------------- */
 .reveal { opacity: 0; transform: translateY(16px); transition: opacity .7s ease, transform .7s ease; }
@@ -291,6 +300,7 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
   .pub { grid-template-columns: 1fr; gap: 4px; }
   .pub--featured::before { left: -12px; }
   .events li { grid-template-columns: 1fr; gap: 2px; }
+  .callout { padding: 28px 22px; }
   .footer__inner { flex-direction: column; gap: 6px; }
 }
 @media (prefers-reduced-motion: reduce) {

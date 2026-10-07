@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SINTEX-F2 simulations and linear models — Balaji Senapati</title>
+  <meta name="description" content="SINTEX-F2 coupled-model control and sensitivity experiments, and linear models, used to study the Southern Hemisphere wavenumber-4 pattern. Data available on request.">
+  <meta name="author" content="Balaji Senapati">
+  <meta property="og:title" content="SINTEX-F2 simulations and linear models — Balaji Senapati">
+  <meta property="og:description" content="Coupled-model experiments and linear models used to study the Southern Hemisphere wavenumber-4 pattern. Data available on request.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://senapatibalaji.github.io/sintex-f2.html">
+  <meta property="og:image" content="https://senapatibalaji.github.io/assets/photo.jpeg">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%230b2540'/><text x='50%25' y='56%25' text-anchor='middle' dominant-baseline='middle' font-family='Georgia,serif' font-size='30' fill='%23e8c47a'>BS</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="nav nav--solid is-scrolled">
+  <div class="nav__inner">
+    <a href="index.html" class="nav__brand">Balaji Senapati</a>
+    <button class="nav__toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span></button>
+    <nav class="nav__links" aria-label="Main">
+      <a href="index.html#about">About</a>
+      <a href="index.html#research">Research</a>
+      <a href="index.html#publications">Publications</a>
+      <a href="index.html#experience">Experience</a>
+      <a href="index.html#talks">Talks</a>
+      <a href="index.html#teaching">Teaching</a>
+      <a href="index.html#recognition">Recognition</a>
+      <a href="index.html#contact" class="nav__cta">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<section class="page-head" id="top">
+  <div class="container">
+    <a href="index.html#research" class="back-link">← Back to research</a>
+    <h1>SINTEX-F2 simulations and linear models</h1>
+    <div class="prose">
+      <p>These simulations and models underpin my research on the Southern Hemisphere circumpolar <strong>wavenumber-4 pattern</strong>. With the <strong>SINTEX-F2</strong> coupled model, we showed that SST variability in the southwestern subtropical Pacific triggers the atmospheric variability that generates the pattern during austral summer, while tropical SST variability has a limited effect (<a href="https://doi.org/10.1029/2023JC020801" target="_blank" rel="noopener">Senapati et al., 2024, JGR-Oceans</a>).</p>
+      <p>In the sensitivity experiments, SST in selected regions is kept at its climatology, removing its variability there, to isolate where the pattern originates.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <h2>SINTEX-F2 experiments</h2>
+    <div class="table-wrap">
+      <table class="exp-table">
+        <thead>
+          <tr><th>Experiment</th><th>SST kept at climatology in</th><th>Length</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>CTRL</td><td>None (control run)</td><td>300 years</td></tr>
+          <tr><td>noTP</td><td>Tropical Pacific (25°S–25°N)</td><td>300 years</td></tr>
+          <tr><td>noTIO</td><td>Tropical Indian Ocean</td><td>—</td></tr>
+          <tr><td>noTIOTP</td><td>Tropical Indian Ocean and tropical Pacific</td><td>—</td></tr>
+          <tr><td>noTALL</td><td>All tropical oceans (25°S–25°N)</td><td>300 years</td></tr>
+          <tr><td>noTS</td><td>Tasman Sea (150°E–168°W, 50°S–25°S)</td><td>100 years</td></tr>
+          <tr><td>noTIOTPMCTS</td><td>Tropical Indian Ocean, tropical Pacific, Maritime Continent and Tasman Sea</td><td>100 years</td></tr>
+          <tr><td>noTPMCTS</td><td>Tropical Pacific, Maritime Continent and Tasman Sea</td><td>100 years</td></tr>
+          <tr><td>noTIOTPMC</td><td>Tropical Indian Ocean, tropical Pacific and Maritime Continent</td><td>100 years</td></tr>
+          <tr><td>noTIOTS</td><td>Tropical Indian Ocean and Tasman Sea</td><td>100 years</td></tr>
+          <tr><td>noTIOMCTS</td><td>Tropical Indian Ocean, Maritime Continent and Tasman Sea</td><td>100 years</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">Region codes: <b>TP</b> tropical Pacific · <b>TIO</b> tropical Indian Ocean · <b>MC</b> Maritime Continent · <b>TS</b> Tasman Sea · <b>TALL</b> all tropical oceans.</p>
+  </div>
+</section>
+
+<section class="section section--tint">
+  <div class="container">
+    <h2>Linear models</h2>
+    <div class="cards">
+      <article class="card">
+        <h3>Linear barotropic model</h3>
+        <p>Used to examine Rossby wave propagation and the atmospheric response to idealised forcing.</p>
+      </article>
+      <article class="card">
+        <h3>Linear response model</h3>
+        <p>Used for idealised experiments on the atmospheric response to prescribed forcing.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="callout">
+      <h2>Data and code on request</h2>
+      <p>If you would like to analyse output from any of these experiments, or use the linear models, please get in touch. I am happy to share.</p>
+      <a class="btn btn--primary" href="mailto:b.senapati@reading.ac.uk">Email b.senapati@reading.ac.uk</a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="container footer__inner">
+    <p>© <span id="year"></span> Balaji Senapati</p>
+    <p class="footer__visits" hidden><span id="visits"></span> visitors since September 2026</p>
+    <p><a href="#top">Back to top ↑</a></p>
+  </div>
+</footer>
+
+<script data-goatcounter="https://senapatibalaji.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
