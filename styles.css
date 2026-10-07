@@ -344,7 +344,7 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 .sources li { padding: 10px 0 10px 20px; }
 
 /* Monsoon page: drought/flood/normal bars, ENSO/IOD/North Atlantic symbols, compact tiles */
-.viz { --viz-wet: #2a78d6; --viz-dry: #e34948; --viz-normal: #8a8984; --viz-enso: #eb6834; --viz-iod: #4a3aa7; --viz-na: #199e70; }
+.viz { --viz-wet: #2a78d6; --viz-dry: #e34948; --viz-normal: #9e9d97; --viz-enso: #eb6834; --viz-iod: #4a3aa7; --viz-na: #199e70; }
 .monsoon-top { display: grid; grid-template-columns: 1fr minmax(320px, 400px); gap: 20px 40px; align-items: start; margin-bottom: 24px; }
 .monsoon-top .controls { flex-direction: column; flex-wrap: nowrap; gap: 16px; padding: 0; margin: 0; border-bottom: 0; }
 .stat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
