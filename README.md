@@ -40,3 +40,4 @@ Then update the links on Google Scholar, ORCID, your department profile and your
 - **"Last updated" date:** the footer fills this in automatically from the date GitHub publishes the site, so there is nothing to edit.
 - **Refresh the climate index data:** run `python3 data/update_indices.py` in this folder, then commit and push. It downloads the latest values from NOAA and the British Antarctic Survey.
 - **Add a new monsoon season (each October):** add the year and its all-India rainfall (% of normal, from IMD's end-of-season report) to `IMD_RECENT` in `data/update_monsoon.py`, then run `python3 data/update_indices.py` and `python3 data/update_monsoon.py`, and commit and push.
+- **After changing `styles.css`, any `.js` file or the data files:** change the `?v=` tag on those files in every HTML page (any new value, e.g. `?v=20261107`). This makes browsers fetch the new files instead of mixing old and new copies.
