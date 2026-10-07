@@ -6,6 +6,9 @@ A static site of plain HTML, CSS and JavaScript files. There is no build step an
 index.html     main page (most content lives here)
 tipmip.html    TIPMIP ocean simulations page (linked from the AMOC research theme)
 sintex-f2.html SINTEX-F2 simulations and linear models (linked from the wavenumber-4 theme)
+climate-indices.html  interactive climate index explorer (linked below the research themes)
+indices.js     charts for the climate index explorer
+data/          climate index data and the script that refreshes it
 styles.css     design
 script.js      navigation, publication filter, animated hero background
 assets/        photo.jpeg and Balaji_Senapati_CV.pdf
@@ -33,3 +36,4 @@ Then update the links on Google Scholar, ORCID, your department profile and your
 - **Add a talk:** copy one `<li>` inside the relevant `<ul class="events">` list.
 - **Update the headline numbers:** edit the `<dl class="stats">` block in the About section.
 - **"Last updated" date:** the footer fills this in automatically from the date GitHub publishes the site, so there is nothing to edit.
+- **Refresh the climate index data:** run `python3 data/update_indices.py` in this folder, then commit and push. It downloads the latest values from NOAA and the British Antarctic Survey.

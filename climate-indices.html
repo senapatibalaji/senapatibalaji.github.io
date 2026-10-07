@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Climate index explorer — Balaji Senapati</title>
+  <meta name="description" content="Interactive explorer of major climate indices (AMV, NAO, Niño 3.4, PDO, IOD and SAM) from public observational datasets.">
+  <meta name="author" content="Balaji Senapati">
+  <meta property="og:title" content="Climate index explorer — Balaji Senapati">
+  <meta property="og:description" content="Explore AMV, NAO, Niño 3.4, PDO, IOD and SAM since the 1850s, and compare any two indices.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://senapatibalaji.github.io/climate-indices.html">
+  <meta property="og:image" content="https://senapatibalaji.github.io/assets/photo.jpeg">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%230b2540'/><text x='50%25' y='56%25' text-anchor='middle' dominant-baseline='middle' font-family='Georgia,serif' font-size='30' fill='%23e8c47a'>BS</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="nav nav--solid is-scrolled">
+  <div class="nav__inner">
+    <a href="index.html" class="nav__brand">Balaji Senapati</a>
+    <button class="nav__toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span></button>
+    <nav class="nav__links" aria-label="Main">
+      <a href="index.html#about">About</a>
+      <a href="index.html#research">Research</a>
+      <a href="index.html#publications">Publications</a>
+      <a href="index.html#experience">Experience</a>
+      <a href="index.html#talks">Talks</a>
+      <a href="index.html#teaching">Teaching</a>
+      <a href="index.html#recognition">Recognition</a>
+      <a href="index.html#contact" class="nav__cta">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<section class="page-head" id="top">
+  <div class="container">
+    <a href="index.html#research" class="back-link">← Back to research</a>
+    <h1>Climate index explorer</h1>
+    <div class="prose">
+      <p>Explore how the main modes of climate variability have evolved since the mid-1800s, from observations. Choose the indices, period and smoothing; hover over a chart, or use the arrow keys, to read values; and compare any two indices below.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section explorer viz">
+  <div class="container">
+    <div class="controls" role="group" aria-label="Chart options">
+      <div class="control">
+        <span class="control__label">Indices</span>
+        <div class="chips" id="indexChips"></div>
+      </div>
+      <div class="control">
+        <span class="control__label">Period</span>
+        <div class="chips" id="periodPresets"></div>
+        <div class="years">
+          <label class="sr-only" for="yearFrom">From year</label><input class="field year-input" id="yearFrom" type="number" inputmode="numeric">
+          <span>to</span>
+          <label class="sr-only" for="yearTo">To year</label><input class="field year-input" id="yearTo" type="number" inputmode="numeric">
+        </div>
+      </div>
+      <div class="control">
+        <label class="control__label" for="smoothing">Smoothing</label>
+        <select class="field" id="smoothing"></select>
+      </div>
+    </div>
+
+    <p class="viz-key"><span><i class="viz-key__pos"></i>Positive phase</span><span><i class="viz-key__neg"></i>Negative phase</span></p>
+    <div class="panels" id="panels"></div>
+
+    <div class="table-tools">
+      <details id="tableView" class="table-view">
+        <summary>Show data table (annual means)</summary>
+        <div class="table-wrap" id="tableWrap"></div>
+      </details>
+      <button class="btn btn--ghost-dark" id="csvButton" type="button">Download CSV</button>
+    </div>
+  </div>
+</section>
+
+<section class="section section--tint viz">
+  <div class="container">
+    <h2>Compare two indices</h2>
+    <div class="compare">
+      <div class="compare__side">
+        <label class="control__label" for="cmpA">Index A</label>
+        <select class="field" id="cmpA"></select>
+        <label class="control__label" for="cmpB">Index B</label>
+        <select class="field" id="cmpB"></select>
+        <label class="control__label" for="cmpLag">Lead / lag (months)</label>
+        <input id="cmpLag" type="range" min="-36" max="36" step="1" value="0">
+        <p class="compare__lag" id="cmpLagLabel">No lag</p>
+        <div class="stat">
+          <span class="stat__label">Correlation (r)</span>
+          <span class="stat__value" id="cmpR">–</span>
+          <span class="stat__meta" id="cmpMeta"></span>
+        </div>
+      </div>
+      <figure class="compare__chart">
+        <p class="legend"><span><i class="viz-key__s1"></i><span id="cmpKeyA"></span></span><span><i class="viz-key__s2"></i><span id="cmpKeyB"></span></span></p>
+        <div id="cmpChart"></div>
+        <figcaption class="note">Both indices are standardised over the period shown, so they share one axis. Uses the period and smoothing chosen above. Smoothing and autocorrelation reduce the number of independent samples, so treat correlations of smoothed series with care.</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <h2>About the data</h2>
+    <ul class="list-bullets sources" id="sourceList"></ul>
+    <p class="note">Data last downloaded on <span id="dataUpdated"></span>. Values are monthly anomalies or index values as published by each source; running means are centred.</p>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="container footer__inner">
+    <p>© <span id="year"></span> Balaji Senapati<span id="updated"></span></p>
+    <p class="footer__visits" hidden><span id="visits"></span> visitors since September 2026</p>
+    <p><a href="#top">Back to top ↑</a></p>
+  </div>
+</footer>
+
+<script data-goatcounter="https://senapatibalaji.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+<script src="script.js"></script>
+<script src="data/climate-indices.js"></script>
+<script src="indices.js"></script>
+</body>
+</html>
