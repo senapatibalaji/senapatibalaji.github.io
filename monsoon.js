@@ -52,10 +52,7 @@
     const p = pctOfNormal(r);
     return p < 90 ? 'Deficient' : p <= 95 ? 'Below normal' : p <= 104 ? 'Normal' : p <= 110 ? 'Above normal' : 'Excess';
   };
-  const barClass = r => {
-    const c = category(r);
-    return c === 'Excess' ? 'bar--excess' : c === 'Deficient' ? 'bar--deficient' : r.dep >= 0 ? 'bar--wet' : 'bar--dry';
-  };
+  const barClass = r => ({ Excess: 'bar--flood', Deficient: 'bar--drought' })[category(r)] || 'bar--normal';
   const phaseText = r => {
     const p = phase(r);
     const enso = r.nino == null ? 'not yet available' : p.elnino ? 'El Niño' : p.lanina ? 'La Niña' : 'neutral';
@@ -110,7 +107,7 @@
     const pct = (n, rs) => Math.round(100 * n / rs.length) + '%';
     const filtered = state.highlight !== 'all';
     const tile = (label, value, sub) => {
-      const t = htmlEl('div', 'stat stat--tile', null, row);
+      const t = htmlEl('div', 'stat stat--small', null, row);
       htmlEl('span', 'stat__label', label, t);
       htmlEl('span', 'stat__value', value, t);
       if (sub) htmlEl('span', 'stat__meta', sub, t);
@@ -118,9 +115,9 @@
     const span = `${all[0].y}–${all[all.length - 1].y}`;
     tile(filtered ? HIGHLIGHT_NOUN[state.highlight] : 'Seasons', String(set.length), filtered ? `of ${all.length} seasons, ${span}` : span);
     if (!set.length) return;
-    tile('Average rainfall vs normal', signed(mean(set)) + '%', filtered ? `All years: ${signed(mean(all))}%` : null);
-    tile('Deficient seasons', pct(deficient(set), set), `${deficient(set)} of ${set.length}` + (filtered ? ` · all years: ${pct(deficient(all), all)}` : ''));
-    tile('Excess seasons', pct(excess(set), set), `${excess(set)} of ${set.length}` + (filtered ? ` · all years: ${pct(excess(all), all)}` : ''));
+    tile('Average vs normal', signed(mean(set)) + '%', filtered ? `All years: ${signed(mean(all))}%` : 'All seasons in the period');
+    tile('Drought years', pct(deficient(set), set), `${deficient(set)} of ${set.length}` + (filtered ? ` · all years: ${pct(deficient(all), all)}` : ''));
+    tile('Flood years', pct(excess(set), set), `${excess(set)} of ${set.length}` + (filtered ? ` · all years: ${pct(excess(all), all)}` : ''));
   }
 
   // ---------- Rainfall bar chart ----------
@@ -147,8 +144,8 @@
     wrap.textContent = '';
     wrap.appendChild(tip);
     const rows = inPeriod();
-    const W = Math.max(wrap.clientWidth, 280), H = 320;
-    const m = { l: 44, r: W < 560 ? 12 : 76, t: 10, b: 24 };
+    const W = Math.max(wrap.clientWidth, 280), H = 350, track = 13;
+    const m = { l: 44, r: W < 560 ? 12 : 76, t: 8 + 2 * track + 16, b: 24 };
     const n = rows.length, band = (W - m.l - m.r) / n;
     const bw = band >= 4 ? Math.min(24, band - 2) : band * 0.7;
     const yMax = Math.ceil(Math.max(...rows.map(r => Math.abs(r.dep))) / 10) * 10;
@@ -169,6 +166,19 @@
       svgEl('line', { x1: m.l, x2: W - m.r, y1: y(v), y2: y(v), class: 'viz-ref' }, svg);
       if (m.r > 40) svgEl('text', { x: W - m.r + 6, y: y(v) + 4, class: 'viz-tick' }, svg).textContent = v > 0 ? 'Excess' : 'Deficient';
     }
+
+    // ENSO and IOD symbols in two tracks above the bars
+    const s = Math.max(2.5, Math.min(4.5, band * 0.45));
+    const ensoY = 8 + track / 2, iodY = 8 + track * 1.5;
+    svgEl('text', { x: m.l - 6, y: ensoY + 3.5, class: 'viz-track-label', 'text-anchor': 'end' }, svg).textContent = 'ENSO';
+    svgEl('text', { x: m.l - 6, y: iodY + 3.5, class: 'viz-track-label', 'text-anchor': 'end' }, svg).textContent = 'IOD';
+    rows.forEach((r, i) => {
+      const p = phase(r), cx = m.l + (i + 0.5) * band;
+      if (p.elnino) svgEl('path', { d: `M${cx},${ensoY - s}L${cx + s},${ensoY + s * 0.8}H${cx - s}Z`, class: 'sym-enso' }, svg);
+      if (p.lanina) svgEl('path', { d: `M${cx},${ensoY + s}L${cx + s},${ensoY - s * 0.8}H${cx - s}Z`, class: 'sym-enso sym--open' }, svg);
+      if (p.piod) svgEl('circle', { cx, cy: iodY, r: s * 0.9, class: 'sym-iod' }, svg);
+      if (p.niod) svgEl('circle', { cx, cy: iodY, r: s * 0.8, class: 'sym-iod sym--open' }, svg);
+    });
 
     const bars = rows.map((r, i) => svgEl('path', {
       d: barPath(xOf(i), bw, y(0), y(r.dep), 2),
@@ -193,13 +203,14 @@
       setHover(i, box.left + (m.l + (i + 0.5) * band) * box.width / W, box.top + 40);
     });
     svg.addEventListener('blur', () => setHover(null));
-    chart = { rows, bars };
+    chart = { rows, bars, svg };
     hoverIdx = null;
   }
 
   function setHover(i, cx, cy) {
     if (hoverIdx != null && chart.bars[hoverIdx]) chart.bars[hoverIdx].classList.remove('bar--hover');
     hoverIdx = i;
+    chart.svg.classList.toggle('is-hovering', i != null);
     if (i == null) { tip.hidden = true; return; }
     const r = chart.rows[i];
     chart.bars[i].classList.add('bar--hover');

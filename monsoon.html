@@ -50,27 +50,33 @@
 
 <section class="section explorer viz">
   <div class="container">
-    <div class="controls" role="group" aria-label="Chart options">
-      <div class="control">
-        <span class="control__label">Highlight</span>
-        <div class="chips" id="highlightChips"></div>
+    <div class="monsoon-top">
+      <div class="controls" role="group" aria-label="Chart options">
+        <div class="control">
+          <span class="control__label">Highlight</span>
+          <div class="chips" id="highlightChips"></div>
+        </div>
+        <div class="control">
+          <span class="control__label">Period</span>
+          <div class="chips" id="periodChips"></div>
+        </div>
       </div>
-      <div class="control">
-        <span class="control__label">Period</span>
-        <div class="chips" id="periodChips"></div>
-      </div>
+      <div class="stat-grid" id="statRow" aria-live="polite"></div>
     </div>
-
-    <div class="stat-row" id="statRow" aria-live="polite"></div>
 
     <figure class="viz-figure">
       <figcaption class="viz-figure__title">All-India June–September rainfall, % above or below normal</figcaption>
       <p class="viz-key">
-        <span><i class="viz-key__bar viz-key__bar--excess"></i>Excess (above +10%)</span>
-        <span><i class="viz-key__bar viz-key__bar--wet"></i>Wetter than normal</span>
-        <span><i class="viz-key__bar viz-key__bar--dry"></i>Drier than normal</span>
-        <span><i class="viz-key__bar viz-key__bar--deficient"></i>Deficient (below −10%)</span>
-        <span id="dimKey" hidden><i class="viz-key__bar viz-key__bar--dim"></i>Other years</span>
+        <span><i class="viz-key__bar viz-key__bar--drought"></i>Drought year (deficient, below −10%)</span>
+        <span><i class="viz-key__bar viz-key__bar--flood"></i>Flood year (excess, above +10%)</span>
+        <span><i class="viz-key__bar viz-key__bar--normal"></i>Normal range</span>
+        <span id="dimKey" hidden><i class="viz-key__bar viz-key__bar--dim"></i>Not highlighted</span>
+      </p>
+      <p class="viz-key">
+        <span><svg viewBox="-6 -6 12 12" aria-hidden="true"><path class="sym-enso" d="M0,-5L5,4H-5Z"/></svg>El Niño</span>
+        <span><svg viewBox="-6 -6 12 12" aria-hidden="true"><path class="sym-enso sym--open" d="M0,5L5,-4H-5Z"/></svg>La Niña</span>
+        <span><svg viewBox="-6 -6 12 12" aria-hidden="true"><circle class="sym-iod" r="4.5"/></svg>Positive IOD</span>
+        <span><svg viewBox="-6 -6 12 12" aria-hidden="true"><circle class="sym-iod sym--open" r="4"/></svg>Negative IOD</span>
       </p>
       <div class="bars" id="rainChart"></div>
     </figure>

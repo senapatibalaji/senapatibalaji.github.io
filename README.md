@@ -8,7 +8,7 @@ tipmip.html    TIPMIP ocean simulations page (linked from the AMOC research them
 sintex-f2.html SINTEX-F2 simulations and linear models (linked from the wavenumber-4 theme)
 climate-indices.html  interactive climate index explorer (linked below the research themes)
 indices.js     charts for the climate index explorer
-monsoon.html   Indian summer monsoon rainfall explorer (linked from the Indian Ocean research theme)
+monsoon.html   Indian summer monsoon rainfall explorer (linked below the research themes)
 monsoon.js     charts for the monsoon page
 data/          data for the interactive pages and the scripts that refresh them
 styles.css     design
