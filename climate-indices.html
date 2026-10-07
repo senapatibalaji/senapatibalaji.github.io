@@ -15,7 +15,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20261007b">
+  <link rel="stylesheet" href="styles.css?v=20261007c">
 </head>
 <body>
 
@@ -92,19 +92,25 @@
         <select class="field" id="cmpA"></select>
         <label class="control__label" for="cmpB">Index B</label>
         <select class="field" id="cmpB"></select>
-        <label class="control__label" for="cmpLag">Lead / lag (months)</label>
+        <span class="control__label">Running mean</span>
+        <div class="chips" id="cmpSmooth" role="group" aria-label="Running mean for the comparison"></div>
+        <label class="control__label" for="cmpLag">Lead / lag (<span id="cmpLagUnit">months</span>)</label>
         <input id="cmpLag" type="range" min="-36" max="36" step="1" value="0">
         <p class="compare__lag" id="cmpLagLabel">No lag</p>
         <div class="stat">
           <span class="stat__label">Correlation (r)</span>
           <span class="stat__value" id="cmpR">–</span>
           <span class="stat__meta" id="cmpMeta"></span>
+          <span class="stat__meta" id="cmpSig"></span>
         </div>
       </div>
       <figure class="compare__chart">
         <p class="legend"><span><i class="viz-key__s1"></i><span id="cmpKeyA"></span></span><span><i class="viz-key__s2"></i><span id="cmpKeyB"></span></span></p>
         <div id="cmpChart"></div>
-        <figcaption class="note">Both indices are standardised over the period shown, so they share one axis. Uses the period and smoothing chosen above. Smoothing and autocorrelation reduce the number of independent samples, so treat correlations of smoothed series with care.</figcaption>
+        <h3 class="subhead subhead--small">Correlation at each lead and lag</h3>
+        <div class="bars" id="cmpLagChart"></div>
+        <p class="compare__best" id="cmpBest"></p>
+        <figcaption class="note">Both indices are standardised over the period chosen above, so they share one axis. The running mean chosen here is applied to both before correlating. Inside the grey band a correlation is not significant at the 95% level, using an effective sample size that accounts for autocorrelation (Bretherton et al., 1999); running means leave only a handful of independent values.</figcaption>
       </figure>
     </div>
   </div>
@@ -130,7 +136,7 @@
 
 <script data-goatcounter="https://senapatibalaji.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
 <script src="script.js?v=20261007b"></script>
-<script src="data/climate-indices.js?v=20261007b"></script>
-<script src="indices.js?v=20261007b"></script>
+<script src="data/climate-indices.js?v=20261007c"></script>
+<script src="indices.js?v=20261007c"></script>
 </body>
 </html>

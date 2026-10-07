@@ -336,6 +336,9 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 .compare__side .control__label { margin-top: 8px; }
 .compare__lag { font-size: .88rem; color: var(--ink-soft); margin: 0; }
 .compare__chart { margin: 0; min-width: 0; }
+.subhead--small { font-size: 1.05rem; margin: 24px 0 6px; }
+.compare__best { font-size: .88rem; color: var(--ink-soft); margin: 6px 0 0; }
+.viz-lagline { fill: none; stroke: var(--ink); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
 #cmpLag { width: 100%; accent-color: var(--navy); }
 .stat { display: flex; flex-direction: column; gap: 6px; margin-top: 20px; padding: 20px; background: #fff; border: 1px solid var(--line); border-radius: var(--radius); }
 .stat__label { font-size: .85rem; color: var(--ink-soft); }

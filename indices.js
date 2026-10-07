@@ -1,4 +1,5 @@
-// Climate index explorer: small-multiple index panels, a two-index comparison,
+// Climate index explorer: small-multiple index panels, a two-index comparison with
+// running means and a lead-lag correlation chart,
 // a table view and CSV export. Data: data/climate-indices.js (window.CLIMATE_INDICES).
 (() => {
   const DATA = window.CLIMATE_INDICES;
@@ -6,6 +7,7 @@
 
   const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   const SMOOTHING = { 1: 'Monthly values', 12: '12-month running mean', 121: '10-year running mean' };
+  const CMP_SMOOTHING = [[1, 'None'], [132, '11-year'], [252, '21-year'], [372, '31-year']];   // months
   const SVG_NS = 'http://www.w3.org/2000/svg';
 
   // Absolute month index t = year * 12 + (month - 1)
@@ -16,7 +18,7 @@
   const firstYear = Math.floor(firstT / 12);
   const lastYear = Math.floor(lastT / 12);
 
-  const state = { ids: SERIES.map(s => s.id), from: 1950, to: lastYear, smooth: 12, a: 'amv', b: 'nao', lag: 0 };
+  const state = { ids: SERIES.map(s => s.id), from: 1950, to: lastYear, smooth: 12, a: 'amv', b: 'nao', lag: 0, cmpSmooth: 1 };
 
   const $ = id => document.getElementById(id);
   const svgEl = (tag, attrs, parent) => {
@@ -143,7 +145,21 @@
       sel.addEventListener('change', () => { state[key] = sel.value; renderCompare(); });
     }
     const lag = $('cmpLag');
-    lag.addEventListener('input', () => { state.lag = +lag.value; renderCompare(); });
+    lag.addEventListener('input', () => { state.lag = +lag.value * lagUnit(); renderCompare(); });
+    const cmpSmooth = $('cmpSmooth');
+    for (const [w, label] of CMP_SMOOTHING) {
+      const b = htmlEl('button', 'chip', label, cmpSmooth);
+      b.type = 'button';
+      b.setAttribute('aria-pressed', w === state.cmpSmooth);
+      b.addEventListener('click', () => {
+        state.cmpSmooth = w;
+        state.lag = 0;
+        cmpSmooth.querySelectorAll('.chip').forEach((c, i) => c.setAttribute('aria-pressed', CMP_SMOOTHING[i][0] === w));
+        syncLagSlider();
+        renderCompare();
+      });
+    }
+    syncLagSlider();
 
     $('csvButton').addEventListener('click', downloadCsv);
     $('tableView').addEventListener('toggle', renderTable);
@@ -271,44 +287,101 @@
   }
 
   // ---------- Comparison of two indices ----------
-  function renderCompare() {
-    const A = byId[state.a], B = byId[state.b], L = state.lag;
-    const [t1, t2] = windowT();
-    const pairs = [];
+  // Lags are in months without smoothing, and in whole years with a running mean.
+  const lagUnit = () => state.cmpSmooth === 1 ? 1 : 12;
+  const lagMax = () => state.cmpSmooth === 1 ? 36 : 30;
+  function syncLagSlider() {
+    const lag = $('cmpLag');
+    lag.min = -lagMax(); lag.max = lagMax(); lag.step = 1;
+    lag.value = state.lag / lagUnit();
+    $('cmpLagUnit').textContent = state.cmpSmooth === 1 ? 'months' : 'years';
+  }
+  const fmtLag = L => {
+    const u = lagUnit(), v = Math.abs(L) / u, word = u === 1 ? 'month' : 'year';
+    return `${v} ${word}${v === 1 ? '' : 's'}`;
+  };
+
+  // Two-sided 95% Student t quantile (table for small df, Cornish-Fisher expansion beyond)
+  const T_TABLE = [12.706, 4.303, 3.182, 2.776, 2.571, 2.447, 2.365, 2.306, 2.262, 2.228];
+  function tCrit(df) {
+    if (df < 1) return Infinity;
+    if (df <= 10) return T_TABLE[Math.round(df) - 1];
+    const z = 1.959964;
+    return z + (z ** 3 + z) / (4 * df) + (5 * z ** 5 + 16 * z ** 3 + 3 * z) / (96 * df * df);
+  }
+
+  // Pairs of A(t) and B(t + L) over the chosen period, at the comparison running mean
+  function pairsAt(A, B, L) {
+    const [t1, t2] = windowT(), w = state.cmpSmooth, pairs = [];
     for (let t = t1; t <= t2; t++) {
-      const a = valueAt(A, t), b = valueAt(B, t + L);
+      const a = valueAt(A, t, w), b = valueAt(B, t + L, w);
       if (a != null && b != null) pairs.push([t, a, b]);
     }
+    return pairs;
+  }
+  // r, and optionally the effective sample size: n / (1 + 2 Σ (1 - k/n) ρA(k) ρB(k)), summed until
+  // the product of autocorrelations first drops to zero (Bretherton et al., 1999)
+  function corrStats(pairs, withNEff = true) {
+    const n = pairs.length;
+    const ma = pairs.reduce((s, p) => s + p[1], 0) / n, mb = pairs.reduce((s, p) => s + p[2], 0) / n;
+    let sab = 0, saa = 0, sbb = 0;
+    for (const p of pairs) { sab += (p[1] - ma) * (p[2] - mb); saa += (p[1] - ma) ** 2; sbb += (p[2] - mb) ** 2; }
+    const out = { r: sab / Math.sqrt(saa * sbb), n, ma, mb, sa: Math.sqrt(saa / n), sb: Math.sqrt(sbb / n) };
+    if (withNEff) {
+      let sum = 0;
+      for (let k = 1; k < n / 2; k++) {
+        let ca = 0, cb = 0;
+        for (let i = k; i < n; i++) { ca += (pairs[i][1] - ma) * (pairs[i - k][1] - ma); cb += (pairs[i][2] - mb) * (pairs[i - k][2] - mb); }
+        const prod = (ca / saa) * (cb / sbb);
+        if (prod <= 0) break;
+        sum += (1 - k / n) * prod;
+      }
+      out.nEff = Math.min(n, n / (1 + 2 * sum));
+      out.rCrit = rCritFor(out.nEff);
+    }
+    return out;
+  }
+  function rCritFor(nEff) {
+    const df = nEff - 2, tc = tCrit(df);
+    return df < 1 ? 1 : tc / Math.sqrt(df + tc * tc);
+  }
+
+  function renderCompare() {
+    const A = byId[state.a], B = byId[state.b], L = state.lag;
+    const smoothLabel = state.cmpSmooth === 1 ? 'monthly values' : CMP_SMOOTHING.find(c => c[0] === state.cmpSmooth)[1] + ' running mean';
+    const pairs = pairsAt(A, B, L);
     $('cmpLagLabel').textContent = L === 0 ? 'No lag'
-      : L > 0 ? `${A.name} leads ${B.name} by ${L} month${L === 1 ? '' : 's'}`
-      : `${B.name} leads ${A.name} by ${-L} month${L === -1 ? '' : 's'}`;
+      : L > 0 ? `${A.name} leads ${B.name} by ${fmtLag(L)}`
+      : `${B.name} leads ${A.name} by ${fmtLag(L)}`;
 
     const n = pairs.length;
-    const wrap = $('cmpChart');
+    const wrap = $('cmpChart'), lagWrap = $('cmpLagChart');
     wrap.textContent = '';
+    lagWrap.textContent = '';
+    lagWrap.appendChild(lagTip);
     if (n < 24) {
       $('cmpR').textContent = '–';
       $('cmpMeta').textContent = 'Not enough overlapping data in this period.';
+      $('cmpSig').textContent = '';
+      $('cmpBest').textContent = '';
       return;
     }
-    const mean = k => pairs.reduce((acc, p) => acc + p[k], 0) / n;
-    const ma = mean(1), mb = mean(2);
-    let sab = 0, saa = 0, sbb = 0;
-    for (const p of pairs) { sab += (p[1] - ma) * (p[2] - mb); saa += (p[1] - ma) ** 2; sbb += (p[2] - mb) ** 2; }
-    const r = sab / Math.sqrt(saa * sbb);
-    const sa = Math.sqrt(saa / n), sb = Math.sqrt(sbb / n);
-    $('cmpR').textContent = (r < 0 ? '−' : '') + Math.abs(r).toFixed(2);
-    $('cmpMeta').textContent = `${n.toLocaleString('en-GB')} months, ${fmtDate(pairs[0][0])} to ${fmtDate(pairs[n - 1][0])}, ${SMOOTHING[state.smooth].toLowerCase()}`;
+    const st = corrStats(pairs);
+    $('cmpR').textContent = (st.r < 0 ? '−' : '') + Math.abs(st.r).toFixed(2);
+    $('cmpMeta').textContent = `${n.toLocaleString('en-GB')} months, ${fmtDate(pairs[0][0])} to ${fmtDate(pairs[n - 1][0])}, ${smoothLabel}`;
+    $('cmpSig').textContent = st.nEff < 3
+      ? `Effective sample size below 3: too few independent values to test`
+      : `Effective sample size ≈ ${Math.round(st.nEff)} · ${Math.abs(st.r) >= st.rCrit ? 'significant' : 'not significant'} at 95% (|r| ≥ ${st.rCrit.toFixed(2)} needed)`;
 
     // Both series standardised over the overlap, so they share one axis
-    const za = pairs.map(p => [p[0], (p[1] - ma) / sa]), zb = pairs.map(p => [p[0], (p[2] - mb) / sb]);
+    const za = pairs.map(p => [p[0], (p[1] - st.ma) / st.sa]), zb = pairs.map(p => [p[0], (p[2] - st.mb) / st.sb]);
     const W = Math.max(wrap.clientWidth, 280), H = 240, m = { l: 34, r: 10, t: 10, b: 22 };
     const pt1 = pairs[0][0], pt2 = pairs[n - 1][0];
     const x = t => m.l + (t - pt1) / Math.max(pt2 - pt1, 1) * (W - m.l - m.r);
     const maxAbs = Math.max(...za.map(p => Math.abs(p[1])), ...zb.map(p => Math.abs(p[1])));
     const yMax = Math.ceil(maxAbs), y = v => m.t + (yMax - v) / (2 * yMax) * (H - m.t - m.b);
     const svg = svgEl('svg', { viewBox: `0 0 ${W} ${H}`, width: W, height: H, role: 'img',
-      'aria-label': `Standardised ${A.name} and ${B.name}; correlation ${r.toFixed(2)}.` }, wrap);
+      'aria-label': `Standardised ${A.name} and ${B.name}; correlation ${st.r.toFixed(2)}.` }, wrap);
     for (const t of yearTicks(pt1, pt2)) {
       svgEl('line', { x1: x(t), x2: x(t), y1: m.t, y2: H - m.b, class: 'viz-grid' }, svg);
       svgEl('text', { x: x(t), y: H - 6, class: 'viz-tick', 'text-anchor': 'middle' }, svg).textContent = t / 12;
@@ -319,12 +392,87 @@
       svgEl('text', { x: m.l - 6, y: y(v) + 4, class: 'viz-tick', 'text-anchor': 'end' }, svg).textContent = v ? fmtNum(v).replace('.00', '') : '0';
     }
     svgEl('line', { x1: m.l, x2: W - m.r, y1: y(0), y2: y(0), class: 'viz-zero' }, svg);
-    const thin = state.smooth === 1 ? ' viz-line--thin' : '';
+    const thin = state.cmpSmooth === 1 ? ' viz-line--thin' : '';
     svgEl('path', { d: linePath([za.map(p => [x(p[0]), y(p[1])])]), class: 'viz-s1' + thin }, svg);
     svgEl('path', { d: linePath([zb.map(p => [x(p[0]), y(p[1])])]), class: 'viz-s2' + thin }, svg);
 
     $('cmpKeyA').textContent = A.name;
-    $('cmpKeyB').textContent = B.name + (L ? ` (shifted ${L > 0 ? '−' : '+'}${Math.abs(L)} months)` : '');
+    $('cmpKeyB').textContent = B.name + (L ? ` (shifted by ${L > 0 ? '−' : '+'}${fmtLag(L)})` : '');
+    renderLagChart(A, B, smoothLabel);
+  }
+
+  // Correlation at every lead/lag, with the 95% significance band and the current lag marked
+  const lagTip = htmlEl('div', 'viz-tip');
+  lagTip.hidden = true;
+  function renderLagChart(A, B, smoothLabel) {
+    const wrap = $('cmpLagChart'), u = lagUnit(), maxL = lagMax();
+    const base = pairsAt(A, B, 0), baseStats = base.length >= 24 ? corrStats(base) : null;
+    const pts = [];
+    for (let k = -maxL; k <= maxL; k++) {
+      const pairs = pairsAt(A, B, k * u);
+      if (pairs.length < 24 || !baseStats) { pts.push({ k, r: null }); continue; }
+      const nEff = baseStats.nEff * pairs.length / base.length;
+      pts.push({ k, ...corrStats(pairs, false), nEff, rCrit: rCritFor(nEff) });
+    }
+    const valid = pts.filter(p => p.r != null);
+    if (!valid.length) return;
+    const W = Math.max(wrap.clientWidth, 280), H = 200, m = { l: 34, r: 10, t: 10, b: 38 };
+    const x = k => m.l + (k + maxL) / (2 * maxL) * (W - m.l - m.r);
+    const y = v => m.t + (1 - v) / 2 * (H - m.t - m.b);
+    const svg = svgEl('svg', { viewBox: `0 0 ${W} ${H}`, width: W, height: H, role: 'img',
+      'aria-label': `Correlation between ${A.name} and ${B.name} at leads and lags up to ${maxL} ${u === 1 ? 'months' : 'years'}.` }, wrap);
+
+    const band = valid.map(p => [x(p.k), y(Math.min(1, p.rCrit))]);
+    const bandLow = valid.map(p => [x(p.k), y(-Math.min(1, p.rCrit))]).reverse();
+    svgEl('path', { d: 'M' + band.concat(bandLow).map(q => q[0].toFixed(1) + ',' + q[1].toFixed(1)).join('L') + 'Z', class: 'viz-band' }, svg);
+    for (const v of [-1, -0.5, 0, 0.5, 1]) {
+      if (v) svgEl('line', { x1: m.l, x2: W - m.r, y1: y(v), y2: y(v), class: 'viz-grid' }, svg);
+      svgEl('text', { x: m.l - 6, y: y(v) + 4, class: 'viz-tick', 'text-anchor': 'end' }, svg).textContent = v ? (v > 0 ? '+' : '−') + Math.abs(v) : '0';
+    }
+    const tickStep = u === 1 ? 12 : 10;
+    for (let k = -maxL; k <= maxL; k += tickStep) {
+      svgEl('text', { x: x(k), y: H - 22, class: 'viz-tick', 'text-anchor': 'middle' }, svg).textContent = k > 0 ? '+' + k : k < 0 ? '−' + -k : '0';
+    }
+    svgEl('text', { x: m.l, y: H - 4, class: 'viz-tick' }, svg).textContent = `← ${B.name} leads`;
+    svgEl('text', { x: W - m.r, y: H - 4, class: 'viz-tick', 'text-anchor': 'end' }, svg).textContent = `${A.name} leads →`;
+    svgEl('line', { x1: m.l, x2: W - m.r, y1: y(0), y2: y(0), class: 'viz-zero' }, svg);
+    svgEl('line', { x1: x(0), x2: x(0), y1: m.t, y2: H - m.b, class: 'viz-zero' }, svg);
+    svgEl('path', { d: linePath(segments(pts.map(p => [x(p.k), p.r == null ? null : y(p.r)]))), class: 'viz-lagline' }, svg);
+
+    const cur = pts.find(p => p.k === state.lag / u);
+    svgEl('line', { x1: x(cur.k), x2: x(cur.k), y1: m.t, y2: H - m.b, class: 'viz-cross' }, svg);
+    if (cur.r != null) svgEl('circle', { cx: x(cur.k), cy: y(cur.r), r: 4, class: 'viz-dot' }, svg);
+
+    const best = valid.reduce((a, b) => Math.abs(b.r) > Math.abs(a.r) ? b : a);
+    const bestLag = best.k === 0 ? 'no lag' : best.k > 0 ? `${A.name} leading by ${fmtLag(best.k * u)}` : `${B.name} leading by ${fmtLag(best.k * u)}`;
+    $('cmpBest').textContent = `Strongest correlation: r = ${fmtNum(best.r)} with ${bestLag} (${smoothLabel}). Click the chart to set the lag.`;
+
+    const hit = svgEl('rect', { x: m.l, y: 0, width: W - m.l - m.r, height: H - m.b, fill: 'transparent', style: 'cursor:pointer' }, svg);
+    const kFromEvent = e => {
+      const box = svg.getBoundingClientRect(), px = (e.clientX - box.left) * W / box.width;
+      return Math.max(-maxL, Math.min(maxL, Math.round((px - m.l) / (W - m.l - m.r) * 2 * maxL - maxL)));
+    };
+    hit.addEventListener('pointermove', e => {
+      const p = pts.find(q => q.k === kFromEvent(e));
+      lagTip.textContent = '';
+      const lagText = p.k === 0 ? 'No lag' : p.k > 0 ? `${A.name} leads by ${fmtLag(p.k * u)}` : `${B.name} leads by ${fmtLag(p.k * u)}`;
+      htmlEl('div', 'viz-tip__date', lagText, lagTip);
+      const row = htmlEl('div', 'viz-tip__row', null, lagTip);
+      htmlEl('b', null, p.r == null ? '–' : 'r = ' + fmtNum(p.r), row);
+      htmlEl('span', null, p.r == null ? '' : Math.abs(p.r) >= p.rCrit ? 'significant' : 'not significant', row);
+      lagTip.hidden = false;
+      const wb = wrap.getBoundingClientRect();
+      let left = e.clientX - wb.left + 16;
+      if (left + lagTip.offsetWidth > wb.width) left = e.clientX - wb.left - lagTip.offsetWidth - 16;
+      lagTip.style.left = Math.max(0, left) + 'px';
+      lagTip.style.top = Math.max(0, e.clientY - wb.top - 20) + 'px';
+    });
+    hit.addEventListener('pointerleave', () => { lagTip.hidden = true; });
+    hit.addEventListener('click', e => {
+      state.lag = kFromEvent(e) * u;
+      $('cmpLag').value = state.lag / u;
+      renderCompare();
+    });
   }
 
   // ---------- Table view & CSV ----------
