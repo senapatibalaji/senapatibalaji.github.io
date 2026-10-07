@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Indian summer monsoon rainfall — Balaji Senapati</title>
+  <meta name="description" content="Interactive record of all-India summer monsoon rainfall since 1871 and its links with El Niño and the Indian Ocean Dipole.">
+  <meta name="author" content="Balaji Senapati">
+  <meta property="og:title" content="Indian summer monsoon rainfall — Balaji Senapati">
+  <meta property="og:description" content="All-India June–September rainfall since 1871, with El Niño and Indian Ocean Dipole years highlighted.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://senapatibalaji.github.io/monsoon.html">
+  <meta property="og:image" content="https://senapatibalaji.github.io/assets/photo.jpeg">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%230b2540'/><text x='50%25' y='56%25' text-anchor='middle' dominant-baseline='middle' font-family='Georgia,serif' font-size='30' fill='%23e8c47a'>BS</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="nav nav--solid is-scrolled">
+  <div class="nav__inner">
+    <a href="index.html" class="nav__brand">Balaji Senapati</a>
+    <button class="nav__toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span></button>
+    <nav class="nav__links" aria-label="Main">
+      <a href="index.html#about">About</a>
+      <a href="index.html#research">Research</a>
+      <a href="index.html#publications">Publications</a>
+      <a href="index.html#experience">Experience</a>
+      <a href="index.html#talks">Talks</a>
+      <a href="index.html#teaching">Teaching</a>
+      <a href="index.html#recognition">Recognition</a>
+      <a href="index.html#contact" class="nav__cta">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<section class="page-head" id="top">
+  <div class="container">
+    <a href="index.html#research" class="back-link">← Back to research</a>
+    <h1>Indian summer monsoon rainfall</h1>
+    <div class="prose">
+      <p>The Indian summer monsoon (June–September) brings most of India's annual rainfall, so its year-to-year swings matter for water, farming and livelihoods. Explore all-India monsoon rainfall since 1871, and how it relates to El Niño and the Indian Ocean Dipole (IOD). Hover over a bar, or use the arrow keys, to read each season.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section explorer viz">
+  <div class="container">
+    <div class="controls" role="group" aria-label="Chart options">
+      <div class="control">
+        <span class="control__label">Highlight</span>
+        <div class="chips" id="highlightChips"></div>
+      </div>
+      <div class="control">
+        <span class="control__label">Period</span>
+        <div class="chips" id="periodChips"></div>
+      </div>
+    </div>
+
+    <div class="stat-row" id="statRow" aria-live="polite"></div>
+
+    <figure class="viz-figure">
+      <figcaption class="viz-figure__title">All-India June–September rainfall, % above or below normal</figcaption>
+      <p class="viz-key">
+        <span><i class="viz-key__bar viz-key__bar--excess"></i>Excess (above +10%)</span>
+        <span><i class="viz-key__bar viz-key__bar--wet"></i>Wetter than normal</span>
+        <span><i class="viz-key__bar viz-key__bar--dry"></i>Drier than normal</span>
+        <span><i class="viz-key__bar viz-key__bar--deficient"></i>Deficient (below −10%)</span>
+        <span id="dimKey" hidden><i class="viz-key__bar viz-key__bar--dim"></i>Other years</span>
+      </p>
+      <div class="bars" id="rainChart"></div>
+    </figure>
+
+    <div class="table-tools">
+      <details id="tableView" class="table-view">
+        <summary>Show data table</summary>
+        <div class="table-wrap" id="tableWrap"></div>
+      </details>
+      <button class="btn btn--ghost-dark" id="csvButton" type="button">Download CSV</button>
+    </div>
+  </div>
+</section>
+
+<section class="section section--tint viz">
+  <div class="container">
+    <h2>Changing links with ENSO and the IOD</h2>
+    <div class="prose prose--narrow">
+      <p>The running correlation between monsoon rainfall and June–September Niño 3.4 or IOD values, over a moving window. Negative values for Niño 3.4 mean El Niño years tend to be drier. Values inside the grey band are not statistically significant at the 95% level.</p>
+    </div>
+    <div class="controls controls--inline">
+      <div class="control">
+        <label class="control__label" for="corrWindow">Window</label>
+        <select class="field" id="corrWindow">
+          <option value="11">11 years</option>
+          <option value="21" selected>21 years</option>
+          <option value="31">31 years</option>
+        </select>
+      </div>
+    </div>
+    <figure class="viz-figure">
+      <p class="legend"><span><i class="viz-key__s1"></i>Niño 3.4</span><span><i class="viz-key__s2"></i>IOD</span></p>
+      <div class="bars" id="corrChart"></div>
+      <figcaption class="note">Each point is plotted at the centre year of its window and uses the period chosen above.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <h2>About the data</h2>
+    <ul class="list-bullets sources">
+      <li><strong>Rainfall, 1871–2019:</strong> all-India area-weighted June–September rainfall from the Indian Institute of Tropical Meteorology's homogeneous series (306 rain gauges), as % departure from its long-term mean of 880.6 mm (<a href="https://mol.tropmet.res.in/?page_id=912" target="_blank" rel="noopener">IITM Monsoon Online</a>).</li>
+      <li><strong>Rainfall, 2020 onwards:</strong> India Meteorological Department end-of-season figures for the country as a whole, as % of the long period average (<span id="imdLinks"></span>). The two sources use different station networks and normals, so values from 2020 onwards are not strictly continuous with earlier years.</li>
+      <li><strong>Categories</strong> follow IMD: deficient below 90% of normal, below normal 90–95%, normal 96–104%, above normal 105–110%, excess above 110%.</li>
+      <li><strong>El Niño and La Niña years:</strong> June–September mean Niño 3.4 SST anomaly (HadISST, via NOAA PSL), linearly detrended, at or above +0.5 °C (El Niño) or at or below −0.5 °C (La Niña).</li>
+      <li><strong>Positive and negative IOD years:</strong> June–September mean Dipole Mode Index (HadISST, via NOAA PSL), linearly detrended, at or above +0.3 °C or at or below −0.3 °C. The IOD usually peaks in autumn, so some events are weaker in these summer means.</li>
+    </ul>
+    <p class="note">The same Niño 3.4 and IOD series can be explored month by month in the <a href="climate-indices.html">climate index explorer</a>. Data last updated on <span id="dataUpdated"></span>.</p>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="container footer__inner">
+    <p>© <span id="year"></span> Balaji Senapati<span id="updated"></span></p>
+    <p class="footer__visits" hidden><span id="visits"></span> visitors since September 2026</p>
+    <p><a href="#top">Back to top ↑</a></p>
+  </div>
+</footer>
+
+<script data-goatcounter="https://senapatibalaji.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+<script src="script.js"></script>
+<script src="data/monsoon-rainfall.js"></script>
+<script src="monsoon.js"></script>
+</body>
+</html>

@@ -342,6 +342,38 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 .stat__meta { font-size: .8rem; color: var(--muted); }
 .sources li { padding: 10px 0 10px 20px; }
 
+/* Monsoon page: wet/dry bars, summary tiles, significance band */
+.viz { --viz-wet: #2a78d6; --viz-dry: #e34948; --viz-dim: #d9d8d3; }
+.stat-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 28px; }
+.stat--tile { margin-top: 0; }
+.stat--tile .stat__value { font-size: 2.2rem; }
+.viz-figure { margin: 0; }
+.viz-figure__title { font-weight: 600; margin-bottom: 8px; }
+.bars { position: relative; }
+.bars svg { display: block; width: 100%; height: auto; overflow: visible; }
+.bars svg:focus-visible { outline: 2px solid var(--ocean); outline-offset: 4px; border-radius: 4px; }
+.bar--excess { fill: var(--viz-wet); }
+.bar--wet { fill: var(--viz-wet); opacity: .45; }
+.bar--dry { fill: var(--viz-dry); opacity: .45; }
+.bar--deficient { fill: var(--viz-dry); }
+.bar--dim { fill: var(--viz-dim); }
+.bar--hover { stroke: var(--ink); stroke-width: 1; opacity: 1; }
+.viz-key__bar--excess { background: var(--viz-wet); }
+.viz-key__bar--wet { background: var(--viz-wet); opacity: .45; }
+.viz-key__bar--dry { background: var(--viz-dry); opacity: .45; }
+.viz-key__bar--deficient { background: var(--viz-dry); }
+.viz-key__bar--dim { background: var(--viz-dim); }
+.viz-ref { stroke: var(--viz-axis); stroke-width: 1; }
+.viz-band { fill: #e9e8e3; opacity: .7; }
+.viz-tick--label { fill: var(--ink-soft); font-size: 12px; }
+.viz-s1-dot { fill: var(--viz-s1); }
+.viz-s2-dot { fill: var(--viz-s2); }
+.viz-tip__key { display: inline-block; width: 14px; height: 2px; border-radius: 1px; margin-right: 6px; vertical-align: middle; }
+.viz-s1-key { background: var(--viz-s1); }
+.viz-s2-key { background: var(--viz-s2); }
+.prose--narrow { max-width: 760px; }
+.controls--inline { border-bottom: 0; padding: 4px 0 12px; margin-bottom: 0; }
+
 /* ---------------- REVEAL ---------------- */
 .reveal { opacity: 0; transform: translateY(16px); transition: opacity .7s ease, transform .7s ease; }
 .reveal.is-visible { opacity: 1; transform: none; }
@@ -366,6 +398,7 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
   .grid-2, .grid-2--even, .contact { grid-template-columns: 1fr; gap: 48px; }
   .cards { grid-template-columns: 1fr; }
   .compare { grid-template-columns: 1fr; gap: 24px; }
+  .stat-row { grid-template-columns: repeat(2, 1fr); }
   .stats { grid-template-columns: repeat(2, 1fr); gap: 24px 16px; }
 }
 @media (max-width: 560px) {
