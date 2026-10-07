@@ -120,6 +120,26 @@
       if (sub) htmlEl('span', 'stat__meta', sub, t);
     };
     const span = `${all[0].y}–${all[all.length - 1].y}`;
+
+    // Every year in this highlight is a drought, so compare with El Niño droughts instead
+    if (state.highlight === 'drought-noenso') {
+      const droughts = all.filter(r => category(r) === 'Deficient' && r.nino != null);
+      const ensoDroughts = droughts.filter(r => phase(r).elnino);
+      const coldShare = rs => {
+        const known = rs.filter(r => r.na != null);
+        const n = known.filter(r => phase(r).coldna).length;
+        return known.length ? [pct(n, known), `${n} of ${known.length}`] : ['–', 'no data'];
+      };
+      const [coldSet, coldSetN] = coldShare(set), [coldEnso, coldEnsoN] = coldShare(ensoDroughts);
+      const [coldAll] = coldShare(all);
+      tile(HIGHLIGHT_NOUN[state.highlight], String(set.length), droughts.length ? `of ${droughts.length} droughts (${pct(set.length, droughts)}), ${span}` : span);
+      if (!set.length) return;
+      tile('Average vs normal', signed(mean(set)) + '%', ensoDroughts.length ? `El Niño droughts: ${signed(mean(ensoDroughts))}%` : null);
+      tile('With a cold North Atlantic', coldSet, `${coldSetN} · all years: ${coldAll}`);
+      tile('El Niño droughts with a cold North Atlantic', coldEnso, coldEnsoN);
+      return;
+    }
+
     tile(filtered ? HIGHLIGHT_NOUN[state.highlight] : 'Seasons', String(set.length), filtered ? `of ${all.length} seasons, ${span}` : span);
     if (!set.length) return;
     tile('Average vs normal', signed(mean(set)) + '%', filtered ? `All years: ${signed(mean(all))}%` : 'All seasons in the period');
