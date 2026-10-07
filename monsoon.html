@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Indian summer monsoon rainfall — Balaji Senapati</title>
-  <meta name="description" content="Interactive record of all-India summer monsoon rainfall since 1871 and its links with El Niño and the Indian Ocean Dipole.">
+  <meta name="description" content="Interactive record of all-India summer monsoon rainfall since 1871 and its links with El Niño, the Indian Ocean Dipole and North Atlantic SST.">
   <meta name="author" content="Balaji Senapati">
   <meta property="og:title" content="Indian summer monsoon rainfall — Balaji Senapati">
   <meta property="og:description" content="All-India June–September rainfall since 1871, with El Niño and Indian Ocean Dipole years highlighted.">
@@ -43,7 +43,7 @@
     <a href="index.html#research" class="back-link">← Back to research</a>
     <h1>Indian summer monsoon rainfall</h1>
     <div class="prose">
-      <p>The Indian summer monsoon (June–September) brings most of India's annual rainfall, so its year-to-year swings matter for water, farming and livelihoods. Explore all-India monsoon rainfall since 1871, and how it relates to El Niño and the Indian Ocean Dipole (IOD). Hover over a bar, or use the arrow keys, to read each season.</p>
+      <p>The Indian summer monsoon (June–September) brings most of India's annual rainfall, so its year-to-year swings matter for water, farming and livelihoods. Explore all-India monsoon rainfall since 1871, and how it relates to El Niño, the Indian Ocean Dipole (IOD) and North Atlantic sea surface temperature. Hover over a bar, or use the arrow keys, to read each season.</p>
     </div>
   </div>
 </section>
@@ -69,14 +69,16 @@
       <p class="viz-key">
         <span><i class="viz-key__bar viz-key__bar--drought"></i>Drought year (deficient, below −10%)</span>
         <span><i class="viz-key__bar viz-key__bar--flood"></i>Flood year (excess, above +10%)</span>
-        <span><i class="viz-key__bar viz-key__bar--normal"></i>Normal range</span>
-        <span id="dimKey" hidden><i class="viz-key__bar viz-key__bar--dim"></i>Not highlighted</span>
+        <span><i class="viz-key__bar viz-key__bar--normal"></i>Normal year (within ±10%)</span>
+        <span id="dimKey" hidden><i class="viz-key__bar viz-key__bar--faded"></i>Faded: outside the highlight</span>
       </p>
       <p class="viz-key">
         <span><svg viewBox="-6 -6 12 12" aria-hidden="true"><path class="sym-enso" d="M0,-5L5,4H-5Z"/></svg>El Niño</span>
         <span><svg viewBox="-6 -6 12 12" aria-hidden="true"><path class="sym-enso sym--open" d="M0,5L5,-4H-5Z"/></svg>La Niña</span>
         <span><svg viewBox="-6 -6 12 12" aria-hidden="true"><circle class="sym-iod" r="4.5"/></svg>Positive IOD</span>
         <span><svg viewBox="-6 -6 12 12" aria-hidden="true"><circle class="sym-iod sym--open" r="4"/></svg>Negative IOD</span>
+        <span><svg viewBox="-6 -6 12 12" aria-hidden="true"><path class="sym-na" d="M0,-5L5,0L0,5L-5,0Z"/></svg>Cold North Atlantic</span>
+        <span><svg viewBox="-6 -6 12 12" aria-hidden="true"><path class="sym-na sym--open" d="M0,-4.5L4.5,0L0,4.5L-4.5,0Z"/></svg>Warm North Atlantic</span>
       </p>
       <div class="bars" id="rainChart"></div>
     </figure>
@@ -93,9 +95,9 @@
 
 <section class="section section--tint viz">
   <div class="container">
-    <h2>Changing links with ENSO and the IOD</h2>
+    <h2>Changing links with ENSO, the IOD and the North Atlantic</h2>
     <div class="prose prose--narrow">
-      <p>The running correlation between monsoon rainfall and June–September Niño 3.4 or IOD values, over a moving window. Negative values for Niño 3.4 mean El Niño years tend to be drier. Values inside the grey band are not statistically significant at the 95% level.</p>
+      <p>The running correlation between monsoon rainfall and June–September Niño 3.4, IOD or North Atlantic SST values, over a moving window. Negative values for Niño 3.4 mean El Niño years tend to be drier; positive values for the North Atlantic mean cold North Atlantic years tend to be drier. Values inside the grey band are not statistically significant at the 95% level.</p>
     </div>
     <div class="controls controls--inline">
       <div class="control">
@@ -108,7 +110,7 @@
       </div>
     </div>
     <figure class="viz-figure">
-      <p class="legend"><span><i class="viz-key__s1"></i>Niño 3.4</span><span><i class="viz-key__s2"></i>IOD</span></p>
+      <p class="legend"><span><i class="viz-key__enso"></i>Niño 3.4</span><span><i class="viz-key__iod"></i>IOD</span><span><i class="viz-key__na"></i>North Atlantic SST</span></p>
       <div class="bars" id="corrChart"></div>
       <figcaption class="note">Each point is plotted at the centre year of its window and uses the period chosen above.</figcaption>
     </figure>
@@ -124,6 +126,7 @@
       <li><strong>Categories</strong> follow IMD: deficient below 90% of normal, below normal 90–95%, normal 96–104%, above normal 105–110%, excess above 110%.</li>
       <li><strong>El Niño and La Niña years:</strong> June–September mean Niño 3.4 SST anomaly (HadISST, via NOAA PSL), linearly detrended, at or above +0.5 °C (El Niño) or at or below −0.5 °C (La Niña).</li>
       <li><strong>Positive and negative IOD years:</strong> June–September mean Dipole Mode Index (HadISST, via NOAA PSL), linearly detrended, at or above +0.3 °C or at or below −0.3 °C. The IOD usually peaks in autumn, so some events are weaker in these summer means.</li>
+      <li><strong>Cold and warm North Atlantic years:</strong> June–September mean SST averaged over 35°N–55°N, 310°E–340°E, following <a href="https://doi.org/10.1126/science.aay6043" target="_blank" rel="noopener">Borah et al. (2020, Science)</a>, who linked cold North Atlantic conditions to monsoon droughts outside El Niño years. Computed from NOAA ERSSTv5 (area-weighted, via <a href="https://coastwatch.pfeg.noaa.gov/erddap/griddap/nceiErsstv5.html" target="_blank" rel="noopener">ERDDAP</a>) and linearly detrended; cold if at or below −0.5 standard deviations, warm if at or above +0.5.</li>
     </ul>
     <p class="note">The same Niño 3.4 and IOD series can be explored month by month in the <a href="climate-indices.html">climate index explorer</a>. Data last updated on <span id="dataUpdated"></span>.</p>
   </div>

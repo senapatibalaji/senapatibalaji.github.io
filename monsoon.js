@@ -1,4 +1,4 @@
-// Indian summer monsoon page: rainfall bar chart with ENSO/IOD highlighting,
+// Indian summer monsoon page: rainfall bar chart with ENSO, IOD and North Atlantic highlighting,
 // summary tiles, running correlations, a table view and CSV export.
 // Data: data/monsoon-rainfall.js (window.MONSOON).
 (() => {
@@ -7,6 +7,7 @@
 
   const SVG_NS = 'http://www.w3.org/2000/svg';
   const NINO_T = 0.5, IOD_T = 0.3;                    // detrended JJAS thresholds (°C)
+  const NA_T = 0.5 * DATA.naSd;                       // North Atlantic: ±0.5 standard deviations
   const T_CRIT = { 11: 2.262, 21: 2.093, 31: 2.045 }; // two-sided 95% t, df = window - 2
   const YEARS = DATA.years;
   const first = YEARS[0].y, last = YEARS[YEARS.length - 1].y;
@@ -16,6 +17,8 @@
     lanina: r.nino != null && r.nino <= -NINO_T,
     piod: r.iod != null && r.iod >= IOD_T,
     niod: r.iod != null && r.iod <= -IOD_T,
+    coldna: r.na != null && r.na <= -NA_T,
+    warmna: r.na != null && r.na >= NA_T,
   });
   const HIGHLIGHTS = [
     ['all', 'None', null],
@@ -23,11 +26,14 @@
     ['lanina', 'La Niña', r => phase(r).lanina],
     ['piod', 'Positive IOD', r => phase(r).piod],
     ['niod', 'Negative IOD', r => phase(r).niod],
+    ['coldna', 'Cold North Atlantic', r => phase(r).coldna],
     ['elnino-piod', 'El Niño + positive IOD', r => phase(r).elnino && phase(r).piod],
     ['elnino-only', 'El Niño without positive IOD', r => phase(r).elnino && !phase(r).piod],
+    ['drought-noenso', 'Drought without El Niño', r => category(r) === 'Deficient' && r.nino != null && !phase(r).elnino],
   ];
   const HIGHLIGHT_NOUN = { elnino: 'El Niño years', lanina: 'La Niña years', piod: 'Positive IOD years', niod: 'Negative IOD years',
-    'elnino-piod': 'El Niño + positive IOD years', 'elnino-only': 'El Niño years without a positive IOD' };
+    coldna: 'Cold North Atlantic years', 'elnino-piod': 'El Niño + positive IOD years',
+    'elnino-only': 'El Niño years without a positive IOD', 'drought-noenso': 'Droughts without El Niño' };
   const PERIODS = [['1871–now', first], ['1950–now', 1950], ['1980–now', 1980]];
 
   const state = { highlight: 'all', from: first, window: 21 };
@@ -47,17 +53,18 @@
     return n;
   };
   const signed = (v, d = 1) => (v > 0 ? '+' : v < 0 ? '−' : '') + Math.abs(v).toFixed(d);
-  const pctOfNormal = r => Math.round(100 + r.dep);
+  // IMD categories, applied to unrounded values so the colours match the ±10% lines
   const category = r => {
-    const p = pctOfNormal(r);
-    return p < 90 ? 'Deficient' : p <= 95 ? 'Below normal' : p <= 104 ? 'Normal' : p <= 110 ? 'Above normal' : 'Excess';
+    const p = 100 + r.dep;
+    return p < 90 ? 'Deficient' : p < 95.5 ? 'Below normal' : p <= 104.5 ? 'Normal' : p <= 110 ? 'Above normal' : 'Excess';
   };
   const barClass = r => ({ Excess: 'bar--flood', Deficient: 'bar--drought' })[category(r)] || 'bar--normal';
   const phaseText = r => {
     const p = phase(r);
     const enso = r.nino == null ? 'not yet available' : p.elnino ? 'El Niño' : p.lanina ? 'La Niña' : 'neutral';
     const iod = r.iod == null ? 'not yet available' : p.piod ? 'positive' : p.niod ? 'negative' : 'neutral';
-    return [enso, iod];
+    const na = r.na == null ? 'not yet available' : p.coldna ? 'cold' : p.warmna ? 'warm' : 'neutral';
+    return [enso, iod, na];
   };
   const inPeriod = () => YEARS.filter(r => r.y >= state.from);
   const matches = r => { const f = HIGHLIGHTS.find(h => h[0] === state.highlight)[2]; return !f || f(r); };
@@ -145,7 +152,7 @@
     wrap.appendChild(tip);
     const rows = inPeriod();
     const W = Math.max(wrap.clientWidth, 280), H = 350, track = 13;
-    const m = { l: 44, r: W < 560 ? 12 : 76, t: 8 + 2 * track + 16, b: 24 };
+    const m = { l: 44, r: W < 560 ? 12 : 76, t: 8 + 3 * track + 16, b: 24 };
     const n = rows.length, band = (W - m.l - m.r) / n;
     const bw = band >= 4 ? Math.min(24, band - 2) : band * 0.7;
     const yMax = Math.ceil(Math.max(...rows.map(r => Math.abs(r.dep))) / 10) * 10;
@@ -167,22 +174,26 @@
       if (m.r > 40) svgEl('text', { x: W - m.r + 6, y: y(v) + 4, class: 'viz-tick' }, svg).textContent = v > 0 ? 'Excess' : 'Deficient';
     }
 
-    // ENSO and IOD symbols in two tracks above the bars
+    // ENSO, IOD and North Atlantic symbols in three tracks above the bars
     const s = Math.max(2.5, Math.min(4.5, band * 0.45));
-    const ensoY = 8 + track / 2, iodY = 8 + track * 1.5;
+    const ensoY = 8 + track / 2, iodY = 8 + track * 1.5, naY = 8 + track * 2.5;
     svgEl('text', { x: m.l - 6, y: ensoY + 3.5, class: 'viz-track-label', 'text-anchor': 'end' }, svg).textContent = 'ENSO';
     svgEl('text', { x: m.l - 6, y: iodY + 3.5, class: 'viz-track-label', 'text-anchor': 'end' }, svg).textContent = 'IOD';
+    svgEl('text', { x: m.l - 6, y: naY + 3.5, class: 'viz-track-label', 'text-anchor': 'end' }, svg).textContent = 'N. ATL';
     rows.forEach((r, i) => {
       const p = phase(r), cx = m.l + (i + 0.5) * band;
       if (p.elnino) svgEl('path', { d: `M${cx},${ensoY - s}L${cx + s},${ensoY + s * 0.8}H${cx - s}Z`, class: 'sym-enso' }, svg);
       if (p.lanina) svgEl('path', { d: `M${cx},${ensoY + s}L${cx + s},${ensoY - s * 0.8}H${cx - s}Z`, class: 'sym-enso sym--open' }, svg);
       if (p.piod) svgEl('circle', { cx, cy: iodY, r: s * 0.9, class: 'sym-iod' }, svg);
       if (p.niod) svgEl('circle', { cx, cy: iodY, r: s * 0.8, class: 'sym-iod sym--open' }, svg);
+      const diamond = `M${cx},${naY - s}L${cx + s},${naY}L${cx},${naY + s}L${cx - s},${naY}Z`;
+      if (p.coldna) svgEl('path', { d: diamond, class: 'sym-na' }, svg);
+      if (p.warmna) svgEl('path', { d: diamond, class: 'sym-na sym--open' }, svg);
     });
 
     const bars = rows.map((r, i) => svgEl('path', {
       d: barPath(xOf(i), bw, y(0), y(r.dep), 2),
-      class: 'bar ' + (matches(r) ? barClass(r) : 'bar--dim'),
+      class: 'bar ' + barClass(r) + (matches(r) ? '' : ' bar--faded'),
     }, svg));
     svgEl('line', { x1: m.l, x2: W - m.r, y1: y(0), y2: y(0), class: 'viz-zero' }, svg);
 
@@ -210,7 +221,6 @@
   function setHover(i, cx, cy) {
     if (hoverIdx != null && chart.bars[hoverIdx]) chart.bars[hoverIdx].classList.remove('bar--hover');
     hoverIdx = i;
-    chart.svg.classList.toggle('is-hovering', i != null);
     if (i == null) { tip.hidden = true; return; }
     const r = chart.rows[i];
     chart.bars[i].classList.add('bar--hover');
@@ -218,9 +228,10 @@
     htmlEl('div', 'viz-tip__date', String(r.y) + (r.src === 'IMD' ? ' · IMD' : ''), tip);
     const row = (value, label) => { const d = htmlEl('div', 'viz-tip__row', null, tip); htmlEl('b', null, value, d); htmlEl('span', null, label, d); };
     row(signed(r.dep) + '%', 'vs normal · ' + category(r));
-    const [enso, iod] = phaseText(r);
+    const [enso, iod, na] = phaseText(r);
     row(r.nino == null ? '–' : signed(r.nino, 2) + ' °C', 'Niño 3.4 · ' + enso);
     row(r.iod == null ? '–' : signed(r.iod, 2) + ' °C', 'IOD · ' + iod);
+    row(r.na == null ? '–' : signed(r.na, 2) + ' °C', 'N. Atlantic · ' + na);
     tip.hidden = false;
     positionTip(cx, cy);
   }
@@ -249,7 +260,7 @@
     wrap.textContent = '';
     wrap.appendChild(corrTip);
     const rows = inPeriod(), w = state.window, half = (w - 1) / 2;
-    const series = ['nino', 'iod'].map(key => {
+    const series = ['nino', 'iod', 'na'].map(key => {
       const pts = [];
       for (let i = half; i < rows.length - half; i++) {
         const win = rows.slice(i - half, i + half + 1).filter(r => r[key] != null);
@@ -267,7 +278,7 @@
     const x = yr => m.l + (yr - y1) / (y2 - y1) * (W - m.l - m.r);
     const y = v => m.t + (1 - v) / 2 * (H - m.t - m.b);
     const svg = svgEl('svg', { viewBox: `0 0 ${W} ${H}`, width: W, height: H, role: 'img',
-      'aria-label': `Running ${w}-year correlation of monsoon rainfall with Niño 3.4 and the IOD.` }, wrap);
+      'aria-label': `Running ${w}-year correlation of monsoon rainfall with Niño 3.4, the IOD and North Atlantic SST.` }, wrap);
     svgEl('rect', { x: m.l, y: y(rCrit), width: W - m.l - m.r, height: y(-rCrit) - y(rCrit), class: 'viz-band' }, svg);
     for (const v of [-1, -0.5, 0, 0.5, 1]) {
       if (v) svgEl('line', { x1: m.l, x2: W - m.r, y1: y(v), y2: y(v), class: 'viz-grid' }, svg);
@@ -276,7 +287,7 @@
     for (const yr of yearTicks(y1, y2)) svgEl('text', { x: x(yr), y: H - 6, class: 'viz-tick', 'text-anchor': 'middle' }, svg).textContent = yr;
     svgEl('line', { x1: m.l, x2: W - m.r, y1: y(0), y2: y(0), class: 'viz-zero' }, svg);
 
-    const names = ['Niño 3.4', 'IOD'], cls = ['viz-s1', 'viz-s2'];
+    const names = ['Niño 3.4', 'IOD', 'N. Atlantic'], cls = ['viz-enso-line', 'viz-iod-line', 'viz-na-line'];
     const ends = [];
     series.forEach((pts, k) => {
       let d = '', pen = false;
@@ -289,7 +300,8 @@
       const lastPt = [...pts].reverse().find(p => p[1] != null);
       if (lastPt) ends.push([k, x(lastPt[0]), y(lastPt[1])]);
     });
-    if (m.r > 40 && ends.length === 2 && Math.abs(ends[0][2] - ends[1][2]) >= 14) {
+    const ys = ends.map(e => e[2]).sort((a, b) => a - b);
+    if (m.r > 40 && ys.every((v, i) => !i || v - ys[i - 1] >= 14)) {
       for (const [k, ex, ey] of ends) svgEl('text', { x: ex + 6, y: ey + 4, class: 'viz-tick viz-tick--label' }, svg).textContent = names[k];
     }
 
@@ -333,12 +345,14 @@
   const COLUMNS = [
     ['Year', r => String(r.y)],
     ['Rainfall vs normal (%)', r => signed(r.dep)],
-    ['% of normal', r => String(pctOfNormal(r))],
+    ['% of normal', r => (100 + r.dep).toFixed(1)],
     ['Category', category],
     ['Niño 3.4 JJAS (°C)', r => r.nino == null ? '' : signed(r.nino, 2)],
     ['ENSO', r => phaseText(r)[0]],
     ['IOD JJAS (°C)', r => r.iod == null ? '' : signed(r.iod, 2)],
     ['IOD phase', r => phaseText(r)[1]],
+    ['N. Atlantic JJAS (°C)', r => r.na == null ? '' : signed(r.na, 2)],
+    ['N. Atlantic', r => phaseText(r)[2]],
     ['Source', r => r.src],
   ];
   function renderTable() {
