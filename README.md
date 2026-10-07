@@ -32,3 +32,4 @@ Then update the links on Google Scholar, ORCID, your department profile and your
 - **Add a paper:** in `index.html`, copy one `<li class="pub" ...>` block in the Publications section and edit it. Set `data-type` to `lead` (first author), `collab` or `review`, which controls the filter buttons. To add the gold "featured" bar, add `pub--featured` to the class.
 - **Add a talk:** copy one `<li>` inside the relevant `<ul class="events">` list.
 - **Update the headline numbers:** edit the `<dl class="stats">` block in the About section.
+- **"Last updated" date:** the footer fills this in automatically from the date GitHub publishes the site, so there is nothing to edit.

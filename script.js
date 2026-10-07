@@ -5,6 +5,13 @@
 
   document.getElementById('year').textContent = new Date().getFullYear();
 
+  // "Last updated" month: GitHub Pages stamps every file with the publish time
+  const updated = document.getElementById('updated');
+  const modified = new Date(document.lastModified);
+  if (updated && !isNaN(modified)) {
+    updated.textContent = ' · Last updated: ' + modified.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' });
+  }
+
   // Hide the CV button until assets/Balaji_Senapati_CV.pdf has been uploaded
   const cvLink = document.querySelector('a[href$="_CV.pdf"]');
   if (cvLink && location.protocol.startsWith('http')) {
