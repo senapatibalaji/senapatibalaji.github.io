@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The wavenumber-4 story — Balaji Senapati</title>
+  <meta name="description" content="An animated story of the Southern Hemisphere wavenumber-4 pattern: how it starts, how the ocean responds, how it fades, and how it affects rainfall from year to year and decade to decade.">
+  <meta name="author" content="Balaji Senapati">
+  <meta property="og:title" content="The wavenumber-4 story — Balaji Senapati">
+  <meta property="og:description" content="An animated story of how the Southern Hemisphere wavenumber-4 pattern forms, grows, fades and affects rainfall.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://senapatibalaji.github.io/w4-story.html">
+  <meta property="og:image" content="https://senapatibalaji.github.io/assets/photo.jpeg">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%230b2540'/><text x='50%25' y='56%25' text-anchor='middle' dominant-baseline='middle' font-family='Georgia,serif' font-size='30' fill='%23e8c47a'>BS</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=20261008a">
+</head>
+<body>
+
+<header class="nav nav--solid is-scrolled">
+  <div class="nav__inner">
+    <a href="index.html" class="nav__brand">Balaji Senapati</a>
+    <button class="nav__toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span></button>
+    <nav class="nav__links" aria-label="Main">
+      <a href="index.html#about">About</a>
+      <a href="index.html#research">Research</a>
+      <a href="index.html#publications">Publications</a>
+      <a href="index.html#experience">Experience</a>
+      <a href="index.html#talks">Talks</a>
+      <a href="index.html#teaching">Teaching</a>
+      <a href="index.html#recognition">Recognition</a>
+      <a href="index.html#contact" class="nav__cta">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<section class="page-head" id="top">
+  <div class="container">
+    <a href="index.html#research" class="back-link">← Back to research</a>
+    <h1>The wavenumber-4 story</h1>
+    <div class="prose">
+      <p>How a patch of warm water near New Zealand can set off a wave that circles the Southern Hemisphere, change the ocean beneath it, and shift rainfall over the southern continents. Step through the animated scenes with the buttons, the arrow keys, or by swiping.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section story-section">
+  <div class="container">
+    <div class="story">
+      <div class="story__stage">
+        <svg id="w4Stage" viewBox="0 0 1000 600" role="img" aria-labelledby="storyTitle" aria-describedby="storyText"></svg>
+      </div>
+      <div class="story__panel">
+        <div class="story__copy" aria-live="polite">
+          <p class="story__chapter" id="storyChapter"></p>
+          <h2 class="story__title" id="storyTitle"></h2>
+          <p class="story__text" id="storyText"></p>
+        </div>
+        <div class="story__controls">
+          <div class="story__buttons">
+            <button class="btn btn--ghost-dark" id="storyPrev" type="button">← Back</button>
+            <span class="story__count" id="storyCount"></span>
+            <button class="btn btn--primary" id="storyNext" type="button">Next →</button>
+          </div>
+          <div class="story__dots" id="storyDots" aria-label="Scenes"></div>
+          <button class="story__play" id="storyPlay" type="button">▶ Auto-play</button>
+        </div>
+      </div>
+    </div>
+    <p class="note">A simplified cartoon of results from Senapati et al. (2021, 2022a, 2022b, 2024); positions and sizes are schematic.</p>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="container footer__inner">
+    <p>© <span id="year"></span> Balaji Senapati<span id="updated"></span></p>
+    <p class="footer__visits" hidden><span id="visits"></span> visitors since September 2026</p>
+    <p><a href="#top">Back to top ↑</a></p>
+  </div>
+</footer>
+
+<script data-goatcounter="https://senapatibalaji.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+<script src="script.js?v=20261008a"></script>
+<script src="w4-story.js?v=20261008a"></script>
+</body>
+</html>

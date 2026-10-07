@@ -3,3 +3,7 @@ CV.docx
 ~$*
 
 .DS_Store
+
+# Reference presentations (not published)
+*.pptx
+*.ppt

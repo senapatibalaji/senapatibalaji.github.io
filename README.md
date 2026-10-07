@@ -10,6 +10,8 @@ climate-indices.html  interactive climate index explorer (linked below the resea
 indices.js     charts for the climate index explorer
 monsoon.html   Indian summer monsoon rainfall explorer (linked below the research themes)
 monsoon.js     charts for the monsoon page
+w4-story.html  animated wavenumber-4 story (linked from the wavenumber-4 theme)
+w4-story.js    drawings and animation for the story
 data/          data for the interactive pages and the scripts that refresh them
 styles.css     design
 script.js      navigation, publication filter, animated hero background
