@@ -245,6 +245,7 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 .footer a { color: #b8c7d8; }
 
 /* ---------------- SUBPAGES ---------------- */
+.nav.nav--solid { background: #fff; backdrop-filter: none; }
 .page-head { padding: 140px 0 0; }
 .page-head h1 { font-family: var(--serif); font-weight: 500; font-size: clamp(2.2rem, 4.5vw, 3.2rem); letter-spacing: -.02em; margin-bottom: 1.25rem; }
 .page-head .prose { max-width: 760px; }
