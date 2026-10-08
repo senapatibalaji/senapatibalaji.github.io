@@ -264,7 +264,7 @@
     const fill = el('rect', { x: -4, y: 40, width: 8, height: 26, rx: 4, class: shallow ? 'w4-thermo-fill w4-thermo-fill--warm' : 'w4-thermo-fill' }, th);
     el('text', { x: x + 135, y: 92, 'text-anchor': 'middle', class: 'w4-col-title' }, g, shallow ? 'Less evaporation' : 'More evaporation');
     el('text', { x: x + 135, y: top + depth + 26, 'text-anchor': 'middle', class: 'w4-small w4-col-note' }, g,
-      shallow ? 'Light surface water stays on top: thin layer warms' : 'Heavy surface water mixes down: thick layer stays cool');
+      shallow ? 'Light water stays on top: thin layer warms' : 'Heavy water mixes down: thick layer stays cool');
     return { mlRect, fill, shallow };
   };
   const cols = [column(170, true), column(560, false)];

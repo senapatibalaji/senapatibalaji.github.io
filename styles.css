@@ -397,21 +397,33 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 .controls--inline { border-bottom: 0; padding: 4px 0 12px; margin-bottom: 0; }
 
 /* ---------------- WAVENUMBER-4 STORY ---------------- */
-.story-section { padding-top: 32px; }
-.story__stage { border-radius: 22px; overflow: hidden; background: linear-gradient(180deg, #eef6fc 0%, #f8fbfe 55%, #eaf3f9 100%); border: 1px solid var(--line); touch-action: pan-y; }
+.page-head--compact { padding-top: 104px; }
+.page-head--compact .back-link { margin-bottom: 1rem; }
+.page-head--compact h1 { font-size: clamp(2rem, 3.4vw, 2.5rem); margin-bottom: .5rem; }
+.page-head--compact .prose p { font-size: 1rem; margin-bottom: 0; }
+.story-section { padding-top: 24px; }
+.story { display: grid; gap: 20px; }
+.story__stage { align-self: start; border-radius: 22px; overflow: hidden; background: linear-gradient(180deg, #eef6fc 0%, #f8fbfe 55%, #eaf3f9 100%); border: 1px solid var(--line); touch-action: pan-y; }
 .story__stage svg { display: block; width: 100%; height: auto; user-select: none; }
-.story__panel { display: grid; grid-template-columns: 1fr auto; gap: 24px 48px; align-items: start; padding: 28px 4px 8px; }
+.story__panel { display: flex; flex-direction: column; gap: 20px; padding: 0 4px; }
+/* Wide screens: caption and controls beside the animation, so both fit on one screen */
+@media (min-width: 981px) {
+  .story { grid-template-columns: minmax(0, 1.55fr) minmax(320px, 1fr); gap: 36px; align-items: stretch; }
+  .story__panel { padding: 6px 0; }
+  .story__controls { margin-top: auto; }
+}
 .story__chapter { font-size: .75rem; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--ocean); margin-bottom: .4rem; }
-.story__title { font-family: var(--serif); font-weight: 500; font-size: 1.6rem; margin-bottom: .6rem; }
+.story__title { font-family: var(--serif); font-weight: 500; font-size: 1.5rem; margin-bottom: .6rem; }
 .story__title.reveal { opacity: 1; transform: none; }
-.story__text { color: var(--ink-soft); font-size: 1.04rem; max-width: 680px; min-height: 5.5em; }
-.story__controls { display: flex; flex-direction: column; align-items: flex-end; gap: 14px; }
+.story__text { color: var(--ink-soft); font-size: 1rem; max-width: 680px; margin: 0; }
+.story__controls { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; }
 .story__buttons { display: flex; align-items: center; gap: 14px; }
 .story__buttons .btn { font: inherit; font-weight: 600; font-size: .92rem; padding: 10px 20px; border: 0; cursor: pointer; }
 .story__buttons .btn--ghost-dark { border: 1px solid var(--ink); }
 .story__buttons .btn:disabled { opacity: .35; cursor: default; transform: none; }
 .story__count { font-size: .88rem; color: var(--muted); font-variant-numeric: tabular-nums; min-width: 3.5em; text-align: center; }
-.story__dots { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 6px; max-width: 320px; }
+.story__dots { display: flex; flex-wrap: wrap; gap: 6px; max-width: 320px; }
+.story__hint { font-size: .8rem; color: var(--muted); margin: 0; }
 .story__dot { width: 12px; height: 12px; border-radius: 50%; border: 0; padding: 0; background: #d3dae2; cursor: pointer; }
 .story__dot[aria-current="step"] { background: var(--navy); transform: scale(1.25); }
 .story__play { font: inherit; font-size: .84rem; background: none; border: 0; color: var(--ocean); font-weight: 600; cursor: pointer; padding: 0; }
@@ -421,30 +433,30 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 .w4-plane { stroke-width: 1.5; }
 .w4-plane--air { fill: rgba(237, 231, 252, .7); stroke: #b8a6e6; }
 .w4-plane--ocean { fill: #cfe7f6; stroke: #8fbfdd; }
-.w4-plane-title { font: 600 15px var(--sans); fill: var(--ink-soft); }
-.w4-plane-note { font: 500 12px var(--sans); fill: var(--muted); }
+.w4-plane-title { font: 600 18px var(--sans); fill: var(--ink-soft); }
+.w4-plane-note { font: 500 14px var(--sans); fill: var(--muted); }
 .w4-land { fill: #ecdcb8; stroke: #c4a971; stroke-width: 1.2; stroke-linejoin: round; }
 .w4-land-ghost { fill: rgba(196, 169, 113, .14); stroke: rgba(150, 125, 160, .45); stroke-width: 1; }
 .w4-ice { fill: #fbfdff; stroke: #c9dceb; stroke-width: 1.5; }
 .w4-polar-rim { fill: none; stroke: #b7d7ec; stroke-width: 10; }
 .w4-polar-spin { transform-origin: 500px 300px; animation: w4-spin 90s linear infinite; }
 .w4-ring { fill: none; stroke: #7b3fb5; stroke-width: 3; stroke-dasharray: 2 9; stroke-linecap: round; animation: w4-flow 1.4s linear infinite; }
-.w4-label { font: 600 14px var(--sans); fill: var(--ink); }
+.w4-label { font: 600 17px var(--sans); fill: var(--ink); }
 .w4-label-bg { fill: #fff; stroke: rgba(15, 29, 46, .12); }
-.w4-label--small { font-size: 12.5px; }
-.w4-label--tiny { font-size: 11px; }
+.w4-label--small { font-size: 15px; }
+.w4-label--tiny { font-size: 13px; }
 .w4-label--warm { fill: #c2410c; }
 .w4-label--cool { fill: #1864ab; }
 .w4-label--jet { fill: #6a2fa8; }
-.w4-small { font: 500 12.5px var(--sans); fill: var(--ink-soft); }
-.w4-col-title { font: 600 17px var(--sans); fill: var(--ink); }
-.w4-day { font: 600 16px var(--sans); fill: #6a2fa8; }
+.w4-small { font: 500 15px var(--sans); fill: var(--ink-soft); }
+.w4-col-title { font: 600 20px var(--sans); fill: var(--ink); }
+.w4-day { font: 600 19px var(--sans); fill: #6a2fa8; }
 
 .w4-jet { fill: none; stroke: #7b3fb5; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 14 6; animation: w4-flow 1s linear infinite; }
 .w4-hl circle { stroke: #fff; stroke-width: 2; }
 .w4-hl-h { fill: #fff1e6; stroke: #e8590c !important; }
 .w4-hl-l { fill: #e7f1ff; stroke: #1c7ed6 !important; }
-.w4-hl-text { font: 700 14px var(--sans); fill: var(--ink); }
+.w4-hl-text { font: 700 15px var(--sans); fill: var(--ink); }
 .w4-hl-text--small { font-size: 11px; }
 .w4-connector { stroke: #9aa7b6; stroke-width: 1.5; stroke-dasharray: 3 5; }
 
@@ -515,9 +527,6 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
   .cards { grid-template-columns: 1fr; }
   .compare { grid-template-columns: 1fr; gap: 24px; }
   .explore-links { grid-template-columns: 1fr; }
-  .story__panel { grid-template-columns: 1fr; }
-  .story__controls { align-items: flex-start; }
-  .story__dots { justify-content: flex-start; }
   .monsoon-top { grid-template-columns: 1fr; }
   .stats { grid-template-columns: repeat(2, 1fr); gap: 24px 16px; }
 }
