@@ -40,6 +40,11 @@ h1, h2, h3, h4 { margin: 0; line-height: 1.25; }
 h2 { font-family: var(--serif); font-weight: 500; font-size: clamp(1.8rem, 3.2vw, 2.5rem); letter-spacing: -.01em; margin-bottom: 1.5rem; }
 h3 { font-size: 1.05rem; font-weight: 600; }
 p { margin: 0 0 .9rem; }
+/* Body text is justified throughout; hyphenation keeps the word spacing even */
+.hero__lede, .prose p, .card p:not(.card__meta), .timeline p, .items p, .people p, .awards p,
+.media__card p, .contact__lede, .story__text, .note, .list-bullets li, .callout p, .compare__best {
+  text-align: justify; hyphens: auto; -webkit-hyphens: auto;
+}
 ul, ol { margin: 0; padding: 0; list-style: none; }
 
 .container { max-width: var(--maxw); margin: 0 auto; padding: 0 24px; }
