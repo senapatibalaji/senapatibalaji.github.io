@@ -507,13 +507,8 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 @keyframes w4-rise { from { transform: translateY(6px); opacity: 0; } 30% { opacity: 1; } to { transform: translateY(-14px); opacity: 0; } }
 @keyframes w4-pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.12); } }
 
-/* ---------------- HORSESHOE STORY (for young readers) ---------------- */
-.story--kids .story__title, .story--kids .story__text { font-family: "Fredoka", var(--sans); }
-.story--kids .story__title { font-weight: 600; }
-.story--kids .story__text { font-size: 1.08rem; color: var(--ink); hyphens: manual; -webkit-hyphens: manual; }   /* no split words for young readers */
-.story__science { font-size: .86rem; color: var(--ink-soft); background: var(--tint); border-left: 3px solid var(--ocean); border-radius: 0 10px 10px 0; padding: 10px 14px; margin: 14px 0 0; text-align: justify; hyphens: auto; -webkit-hyphens: auto; }
-.story__science:empty { display: none; }
-.story__science strong { color: var(--ocean); font-weight: 600; }
+/* ---------------- HORSESHOE STORY ---------------- */
+.story--hs .story__text { hyphens: manual; -webkit-hyphens: manual; }   /* whole words are easier to read */
 
 .hs-layer { opacity: 0; transition: opacity .6s ease; pointer-events: none; }
 .hs-layer.is-on { opacity: 1; }
@@ -542,7 +537,7 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 .hs-bob { animation: hs-bob 2.6s ease-in-out infinite; }
 .hs-shoe-icon { fill: none; stroke: #5c6b7a; stroke-width: 5; stroke-linecap: round; }
 .hs-shoe-nail { fill: #fff; }
-.hs-label { font: 600 19px "Fredoka", var(--sans); fill: var(--ink); }
+.hs-label { font: 600 19px var(--sans); fill: var(--ink); }
 .hs-label-bg { fill: #fff; stroke: rgba(15, 29, 46, .12); }
 .hs-label--small { font-size: 16.5px; }
 .hs-label--salty { fill: #8a4a12; }
@@ -550,14 +545,14 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 .hs-label--warm { fill: #c92a2a; }
 .hs-label--cold { fill: #1864ab; }
 .hs-label--pacific { fill: #6a2fa8; }
-.hs-chip { font: 600 17px "Fredoka", var(--sans); fill: #fff; }
+.hs-chip { font: 600 17px var(--sans); fill: #fff; }
 .hs-chip-bg { fill: #0b2540; }
 .hs-seawater { fill: #74c0fc; }
 .hs-glass { fill: rgba(255, 255, 255, .22); stroke: #8aa4bd; stroke-width: 4; stroke-linejoin: round; }
 .hs-grain { fill: #fff; stroke: #adb5bd; stroke-width: .8; animation: hs-grain 1.4s linear infinite; }
 .hs-shaker { fill: #fff; stroke: #8aa4bd; stroke-width: 3; }
 .hs-shaker-cap { fill: #adb5bd; }
-.hs-shaker-text { font: 700 14px "Fredoka", var(--sans); fill: #5c6b7a; }
+.hs-shaker-text { font: 700 14px var(--sans); fill: #5c6b7a; }
 .hs-drop { stroke: #4dabf7; stroke-width: 3; }
 .hs-divider { stroke: #d9e3ea; stroke-width: 2; stroke-dasharray: 6 8; }
 .hs-wave { fill: none; stroke: #fff; stroke-width: 3; opacity: .75; }
@@ -566,7 +561,7 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 .hs-down { stroke: #1c7ed6; }
 .hs-flow { fill: none; stroke: #5c6b7a; stroke-width: 6; stroke-linecap: round; stroke-dasharray: 12 10; animation: hs-flow 1s linear infinite; }
 .hs-hill { fill: #f1e3c4; stroke: #c4a971; stroke-width: 2; }
-.hs-name { font: 600 15px "Fredoka", var(--sans); fill: #8a6d3b; letter-spacing: .08em; }
+.hs-name { font: 600 15px var(--sans); fill: #8a6d3b; letter-spacing: .08em; }
 .hs-small { font: 500 14px var(--sans); fill: var(--ink-soft); }
 .hs-ruler { stroke: #fff; stroke-width: 2.5; }
 .hs-depth-line { stroke: #fff; stroke-width: 2; stroke-dasharray: 6 6; }
@@ -585,7 +580,7 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 .hs-shoe-line { fill: none; stroke: #0b7d74; stroke-width: 3; stroke-dasharray: 2 10; stroke-linecap: round; }
 .hs-bigdown { fill: #1c7ed6; stroke: #fff; stroke-width: 2.5; opacity: .9; animation: hs-sink 1.6s ease-in-out infinite; }
 .hs-pacific { fill: none; stroke: #7b3fb5; stroke-width: 5; stroke-linecap: round; stroke-dasharray: 12 10; animation: hs-flow 1.1s linear infinite; }
-.hs-ocean { font: 600 26px "Fredoka", var(--sans); fill: #2f6f9f; letter-spacing: .04em; }
+.hs-ocean { font: 600 26px var(--sans); fill: #2f6f9f; letter-spacing: .04em; }
 .hs-key { stroke: #c9d6e0; stroke-width: 1; }
 .hs-key-text { font: 600 14px var(--sans); fill: var(--ink-soft); }
 .hs-tl { stroke: #c9d3dd; stroke-width: 6; stroke-linecap: round; }
@@ -661,6 +656,7 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
   .story__stage .hs-label { font-size: 26px; }
   .story__stage .hs-label--small { font-size: 23px; }
   .story__stage .hs-tag--minor { display: none; }
+  .story__stage .hs-phone-lower { transform: translateY(46px); }
   .story__stage .hs-chip { font-size: 24px; }
   .story__stage .hs-name { font-size: 20px; }
   .story__stage .hs-ocean { font-size: 34px; }

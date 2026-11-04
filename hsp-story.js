@@ -1,7 +1,7 @@
-// "The horseshoe in the sea": a cartoon story for young readers about how cold water near
-// Australia, sinking and rising air, and rain build the horseshoe salinity pattern (HSP) in the
-// Indian Ocean. Based on Sahu, Senapati, Dash & Behera (2026, Journal of Climate) and the stages
-// in Limonlisa Sahu's lag animation. Fresher water is blue-green and saltier water is brown.
+// "The horseshoe in the sea": a cartoon story, told simply enough for a child to follow, of how
+// cold water near Australia, sinking and rising air, and rain build the horseshoe salinity pattern
+// (HSP) in the Indian Ocean. Based on Sahu, Senapati, Dash & Behera (2026, Journal of Climate) and
+// the stages in Limonlisa Sahu's lag animation. Fresher water is blue-green and saltier water is brown.
 (() => {
   const svg = document.getElementById('hsStage');
   if (!svg) return;
@@ -271,7 +271,7 @@
     cloud(g, cx, 240, 1.3);
     rainStreaks(g, cx, 280, 426, 5, 90);
     sun(g, sink + 150 * dir, 165, 1.1);
-    label(g, rise, 100, upText);
+    label(el('g', { class: 'hs-phone-lower' }, g), rise, 100, upText);   // on phones the two labels are too wide to share a row
     label(g, sink, 100, downText);
     label(g, (rise + cx) / 2 - 30 * dir, 488, 'fresher', 'hs-label hs-label--fresh');
     label(g, sink, 488, 'saltier', 'hs-label hs-label--salty');
@@ -458,11 +458,9 @@
   const SCENES = [
     { chapter: 'Salty or fresh?', title: 'The sea is salty!',
       text: 'Have you ever tasted sea water? It is salty, as if someone stirred lots of salt into it. Rain is different: rain water is fresh, with no salt at all.',
-      science: 'Sea water holds about 35 grams of salt in every kilogram. Rain is fresh water.',
       layers: ['glass'] },
     { chapter: 'Salty or fresh?', title: 'Rain makes it fresher, sun makes it saltier',
       text: 'When lots of rain falls into the sea, the sea gets less salty. We say it gets fresher. When the sun shines and no rain falls, water floats up into the sky but the salt stays behind, so the sea gets saltier! In our pictures, fresher water is blue-green and saltier water is brown.',
-      science: 'Sea surface salinity falls when rainfall beats evaporation and rises when evaporation wins (evaporation minus precipitation, E − P).',
       layers: ['tub'],
       tick: t => {
         const f = ramp(t, 0.6, 4.6);
@@ -472,42 +470,33 @@
       } },
     { chapter: 'The Indian Ocean', title: 'Meet the Indian Ocean',
       text: 'This is the Indian Ocean, a huge sea. India is at the top, Africa is on the left and Australia is on the right. Let’s watch something amazing grow here.',
-      science: 'The tropical and southern Indian Ocean, from Africa to Australia and from about 28°N to 48°S.',
       layers: ['map', 'names', 'oceanName', 'key'] },
     { chapter: 'How it starts', title: 'Brrr! Cold water near Australia',
       text: 'One day, the sea near Australia becomes colder than usual. Brrr! The cold water cools the air just above it. Sometimes the Pacific Ocean next door gives it a little push.',
-      science: 'A cold sea surface temperature (SST) anomaly in the southeastern Indian Ocean (SEIO; 12°–43°S, 95°–116°E), off the west coast of Australia. Changes in the central Pacific (the Niño-4 region) can nudge the SEIO about 9 months ahead, but local air–sea processes in the SEIO drive the slow, decadal changes.',
       layers: ['map', 'names', 'cold', 'pacific', 'key'] },
     { chapter: 'How it starts', title: 'Sinking air: sunny, dry and salty',
       text: 'Cold air is heavy, so it sinks down. Sinking air pushes the rain clouds away, so the middle of the ocean stays sunny and dry. The sun lifts water into the sky, but the salt stays behind. Here the sea gets saltier!',
-      science: 'Cooler SEIO water raises sea-level pressure and suppresses convection over the southeastern tropical Indian Ocean (SETIO; 12°–25°S, 75°–110°E). Less rain falls, and the upper ocean there becomes saltier.',
       layers: ['map', 'names', 'cold', 'sinking', 'salty', 'key'],
       tick: t => { dyn.salty.style.opacity = lerp(0.12, 1, ramp(t, 0.5, 4.5)); } },
     { chapter: 'The air merry-go-round', title: 'A giant merry-go-round of air',
       text: 'The sinking air doesn’t stop there. It slides across the sea towards Africa, climbs high up into the sky, and floats back again. Round and round it goes, like a giant merry-go-round made of air!',
-      science: 'An anomalous regional Walker circulation: sinking over 95°–110°E and rising over the western tropical Indian Ocean (WTIO; 3°N–12°S, 40°–70°E), joined by low-level easterlies and upper-level westerlies. It strengthens over time as its rising branch moves west.',
       layers: ['walker'] },
     { chapter: 'The air merry-go-round', title: 'Rain near Africa makes the sea fresher',
       text: 'Where the air climbs up near Africa, it cools down and makes big rain clouds. Splish, splash! All that fresh rain pours into the sea, so the water near Africa gets fresher.',
-      science: 'More rainfall over the WTIO, and over the Mozambique Channel, freshens the upper ocean there. Rain matters more than evaporation in making the pattern.',
       layers: ['map', 'names', 'cold', 'salty', 'rainW', 'freshW', 'key'],
       tick: t => { dyn.freshW.style.opacity = lerp(0.1, 1, ramp(t, 0.8, 4.8)); } },
     { chapter: 'The air merry-go-round', title: 'Another merry-go-round, from north to south',
       text: 'There is a second air merry-go-round. It sinks over the salty middle and rises far away in the south, where more rain clouds grow. Now the southern sea gets fresher too!',
-      science: 'An anomalous regional Hadley circulation: sinking over 10°–20°S and rising over 30°–45°S, linked by poleward flow near the surface and equatorward flow aloft. It brings more rain to the southern subtropical Indian Ocean (SSIO; 35°–45°S, 60°–120°E). Ocean currents also move salt there, but rain does most of the work.',
       layers: ['hadley'] },
     { chapter: 'The horseshoe', title: 'Ta-da! A horseshoe in the sea',
       text: 'Look! Fresh water near Africa and fresh water in the south curl around the salty water in the middle. Together they make a shape like a horseshoe! Scientists call it the horseshoe salinity pattern.',
-      science: 'The horseshoe salinity pattern (HSP), the leading mode of upper-ocean salinity variability in the Indian Ocean. In its positive phase, a fresher WTIO and SSIO form a connected band around a saltier SETIO.',
       layers: ['map', 'names', 'salty', 'freshW', 'freshS', 'shoe', 'key'],
       tick: t => drawShoe(ramp(t, 0.3, 2.6)) },
     { chapter: 'The horseshoe', title: 'It goes deep, deep down',
       text: 'The horseshoe isn’t just on top of the sea. It reaches down about 150 metres. That’s as deep as five big blue whales lined up nose to tail!',
-      science: 'The pattern extends from the sea surface to about 150 m depth, in both Argo float and EN4 data.',
       layers: ['deep'] },
     { chapter: 'The horseshoe', title: 'It takes about a year and a half',
       text: 'The horseshoe grows slowly. From the cold water near Australia to the full horseshoe takes about a year and a half. That’s 18 months, or one and a half birthdays! Watch it all happen again.',
-      science: 'The HSP follows SEIO SST anomalies by about 17–18 months. This replay follows the lag maps in the paper and Limonlisa’s animation, from 24 months before the peak to the peak: freshening near Africa begins about 12 months before, and the southern band appears about 6 months before.',
       layers: ['map', 'names', 'cold', 'sinking', 'salty', 'rainW', 'freshW', 'warmW', 'rainS', 'freshS', 'shoe', 'timeline', 'chip'],
       tick: t => {
         const p = reduceMotion ? 1 : clamp((t % 16) / 13), m = -24 + 24 * p;
@@ -535,12 +524,10 @@
       } },
     { chapter: 'What it does', title: 'A cosy blanket of fresh water',
       text: 'Fresh water is lighter than salty water, so it floats on top, like a cosy blanket. The blanket keeps the top from mixing with the cold water deep down, so the sun’s warmth stays near the top. Slowly, the sea near Africa gets warmer!',
-      science: 'Freshening lowers surface density, strengthens upper-ocean stratification and makes the mixed layer shallower, which favours heat retention near the surface. WTIO warming follows the freshening by about 6 months.',
       layers: ['blanket'],
       tick: t => { const h = lerp(18, 50, ramp(t, 0.5, 4.5)); thermoFill.setAttribute('height', f1(h)); thermoFill.setAttribute('y', f1(8 - h)); } },
     { chapter: 'Over the years', title: 'It comes and goes',
       text: 'The horseshoe doesn’t stay forever. Over about 12 years it slowly grows and fades, and it can even flip the other way: when the sea near Australia is warm, the middle gets fresher and the horseshoe gets saltier.',
-      science: 'The HSP varies on decadal time scales (8–16 years, peaking near 12 years). A warm SEIO gives the opposite, negative phase. Positive phases include 2004–08 and 2019–21; negative phases include 2010–14.',
       layers: ['map', 'names', 'flip', 'cycle', 'chip'],
       tick: t => {
         const c = reduceMotion ? 1 : Math.cos(2 * Math.PI * t / 10);
@@ -553,7 +540,6 @@
       } },
     { chapter: 'Why it matters', title: 'Why does it matter?',
       html: 'Salt helps decide how the sea warms and cools. Knowing about the horseshoe can help scientists predict our climate years ahead. This story comes from <strong>Limonlisa Sahu</strong>’s PhD research at IIT Kharagpur: <a href="https://doi.org/10.1175/JCLI-D-25-0730.1" target="_blank" rel="noopener">Sahu, Senapati, Dash &amp; Behera (2026), Journal of Climate</a>. You can also explore <a href="monsoon.html">monsoon rainfall</a>, the <a href="climate-indices.html">IOD and other climate indices</a>, or <a href="w4-story.html">the wavenumber-4 story</a>.',
-      science: 'SST–salinity coupling in the Indian Ocean could help improve predictions of decadal climate variability.',
       layers: ['map', 'names', 'salty', 'freshW', 'freshS', 'shoe', 'key'] },
   ];
 
@@ -569,8 +555,8 @@
   // ---------- Player ----------
   let current = 0, start = performance.now(), auto = null;
   const panel = { chapter: document.getElementById('storyChapter'), title: document.getElementById('storyTitle'), text: document.getElementById('storyText'),
-    science: document.getElementById('storyScience'), count: document.getElementById('storyCount'), prev: document.getElementById('storyPrev'),
-    next: document.getElementById('storyNext'), dots: document.getElementById('storyDots'), play: document.getElementById('storyPlay') };
+    count: document.getElementById('storyCount'), prev: document.getElementById('storyPrev'), next: document.getElementById('storyNext'),
+    dots: document.getElementById('storyDots'), play: document.getElementById('storyPlay') };
 
   SCENES.forEach((s, i) => {
     const b = document.createElement('button');
@@ -593,12 +579,6 @@
     panel.chapter.textContent = s.chapter;
     panel.title.textContent = s.title;
     if (s.html) panel.text.innerHTML = s.html; else panel.text.textContent = s.text;
-    panel.science.textContent = '';
-    if (s.science) {
-      const b = document.createElement('strong');
-      b.textContent = 'For grown-ups: ';
-      panel.science.append(b, s.science);
-    }
     panel.count.textContent = `${current + 1} / ${SCENES.length}`;
     panel.prev.disabled = current === 0;
     panel.next.textContent = current === SCENES.length - 1 ? 'Start again ↺' : 'Next →';

@@ -12,7 +12,7 @@ monsoon.html   Indian summer monsoon rainfall explorer (linked below the researc
 monsoon.js     charts for the monsoon page
 w4-story.html  animated wavenumber-4 story (linked from the wavenumber-4 theme)
 w4-story.js    drawings and animation for the story
-hsp-story.html animated horseshoe salinity story for children (linked from the Indian Ocean theme)
+hsp-story.html animated horseshoe salinity story (linked from the Indian Ocean theme)
 hsp-story.js   drawings and animation for the horseshoe story
 data/          data for the interactive pages and the scripts that refresh them
 styles.css     design
