@@ -1,4 +1,4 @@
-// "The horseshoe in the sea": a cartoon story, told simply enough for a child to follow, of how
+// "The horseshoe in the Indian Ocean": a cartoon story, told simply enough for a child to follow, of how
 // cold water near Australia, sinking and rising air, and rain build the horseshoe salinity pattern
 // (HSP) in the Indian Ocean. Based on Sahu, Senapati, Dash & Behera (2026, Journal of Climate) and
 // the stages in Limonlisa Sahu's lag animation. Fresher water is blue-green and saltier water is brown.
