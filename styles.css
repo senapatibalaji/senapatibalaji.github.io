@@ -508,7 +508,7 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 @keyframes w4-pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.12); } }
 
 /* ---------------- HORSESHOE STORY ---------------- */
-.story--hs .story__text { hyphens: manual; -webkit-hyphens: manual; }   /* whole words are easier to read */
+.story--hs .story__text, .story--mon .story__text { hyphens: manual; -webkit-hyphens: manual; }   /* whole words are easier to read */
 
 .hs-layer { opacity: 0; transition: opacity .6s ease; pointer-events: none; }
 .hs-layer.is-on { opacity: 1; }
@@ -599,6 +599,99 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 @keyframes hs-glow { 0%, 100% { opacity: .45; } 50% { opacity: 1; } }
 @keyframes hs-sink { 0%, 100% { transform: translateY(-4px); } 50% { transform: translateY(6px); } }
 
+/* ---------------- MONSOON ONSET STORY (uses the horseshoe story's keyframes) ---------------- */
+.mon-layer { opacity: 0; transition: opacity .6s ease; pointer-events: none; }
+.mon-layer.is-on { opacity: 1; }
+.is-static .mon-layer { transition: none; }
+.mon-board { fill: #fdfcf8; stroke: #d9e3ea; stroke-width: 1.5; }
+.mon-card { fill: #fff; stroke: #d9e3ea; stroke-width: 1.5; }
+.mon-land { fill: #f1e3c4; stroke: #c4a971; stroke-width: 1.5; stroke-linejoin: round; }
+.mon-map-rim { fill: none; stroke: #b9d6ea; stroke-width: 3; }
+.mon-name { font: 600 14px var(--sans); fill: #8a6d3b; letter-spacing: .08em; }
+.mon-ocean { font: 600 16px var(--sans); fill: #2f6f9f; letter-spacing: .06em; }
+.mon-equator { stroke: #8fbcd9; stroke-width: 1.5; stroke-dasharray: 8 8; }
+.mon-small { font: 500 14px var(--sans); fill: var(--ink-soft); }
+.mon-small--strong { font-weight: 600; fill: var(--ink); }
+.mon-small--light { font-weight: 600; fill: #fff; }
+.mon-kerala { fill: #c92a2a; stroke: #fff; stroke-width: 2; }
+.mon-label { font: 600 18px var(--sans); fill: var(--ink); }
+.mon-label-bg { fill: #fff; stroke: rgba(15, 29, 46, .12); }
+.mon-label--small { font-size: 16px; }
+.mon-label--wet { fill: #0b6e66; }
+.mon-label--dry { fill: #9c5418; }
+.mon-label--high { fill: #1c5fa8; }
+.mon-label--low, .mon-label--late { fill: #c92a2a; }
+.mon-label--ok { fill: #2b8a3e; }
+.mon-chip { font: 600 17px var(--sans); fill: #fff; }
+.mon-chip-bg { fill: #0b2540; }
+.mon-wet { fill: none; stroke: #0c8599; stroke-width: 8; stroke-linecap: round; stroke-dasharray: 14 10; animation: hs-flow 1s linear infinite; }
+.mon-wet--weak { stroke-width: 4.5; stroke-dasharray: 8 12; opacity: .8; animation-duration: 2.2s; }
+.mon-wet-glow { fill: none; stroke: #3bc9db; stroke-width: 30; stroke-linecap: round; opacity: .18; }
+.mon-dry { fill: none; stroke: #b5651d; stroke-width: 7; stroke-linecap: round; stroke-dasharray: 3 11; animation: hs-flow 1.2s linear infinite; }
+.mon-dust { fill: #d9a066; }
+.mon-drop { fill: #4dabf7; stroke: #fff; stroke-width: 1.5; }
+.mon-cloud { fill: #fff; stroke: #9fb3c8; stroke-width: 2.5; }
+.mon-rain { stroke: #4dabf7; stroke-width: 3.5; stroke-linecap: round; animation: hs-fall .9s linear infinite; }
+.mon-sun { fill: #ffd43b; stroke: #f59f00; stroke-width: 2.5; }
+.mon-ray { stroke: #f59f00; stroke-width: 3.5; stroke-linecap: round; }
+.mon-sunrays { animation: hs-spin 14s linear infinite; transform-box: fill-box; transform-origin: center; }
+.mon-eye { fill: #1f2933; }
+.mon-mouth { fill: none; stroke: #1f2933; stroke-linecap: round; stroke-linejoin: round; }
+.mon-blush { fill: #ff8fa3; opacity: .55; }
+.mon-vapour { fill: none; stroke: #74c0fc; stroke-width: 2.6; stroke-linecap: round; animation: hs-rise 2s ease-in infinite; }
+.mon-heat { fill: none; stroke: #e8590c; stroke-width: 3.5; stroke-linecap: round; animation: hs-rise 1.8s ease-in infinite; }
+.mon-swirl { fill: none; stroke: #c92a2a; stroke-width: 4; stroke-linecap: round; stroke-dasharray: 10 8; animation: hs-flow 1.2s linear infinite; }
+.mon-swirl-l { font: 700 24px var(--sans); fill: #c92a2a; }
+.mon-badge--h { fill: #1c5fa8; stroke: #fff; stroke-width: 3; }
+.mon-badge--l { fill: #c92a2a; stroke: #fff; stroke-width: 3; }
+.mon-badge-text { font: 700 26px var(--sans); fill: #fff; }
+.mon-wave { fill: none; stroke: #fff; stroke-width: 3; opacity: .75; }
+.mon-hill { fill: #a9d18e; stroke: #6f9b4f; stroke-width: 2; }
+.mon-ground { fill: #f1e3c4; stroke: #c4a971; stroke-width: 2; }
+.mon-height { fill: none; stroke: #9aa7b6; stroke-width: 3; stroke-dasharray: 6 6; }
+.mon-thermo { fill: #fff; stroke: #8a99aa; stroke-width: 1.5; }
+.mon-thermo-fill, .mon-thermo-bulb { fill: #f03e3e; }
+.mon-skin { fill: #e0ac69; }
+.mon-arm { fill: none; stroke: #e0ac69; stroke-width: 9; stroke-linecap: round; }
+.mon-leg { fill: none; stroke: #5c4033; stroke-width: 10; stroke-linecap: round; }
+.mon-shirt { fill: #f08c00; stroke: #c06d00; stroke-width: 2; }
+.mon-hat { fill: #f2d16b; stroke: #b8962e; stroke-width: 2; }
+.mon-sack { fill: #d9b38c; stroke: #9c7a4e; stroke-width: 2; }
+.mon-sack-text { font: 700 11px var(--sans); fill: #6b4f2e; letter-spacing: .06em; }
+.mon-field-dry { fill: #d9b38c; stroke: #b8956a; stroke-width: 2; }
+.mon-field-wet { fill: #8cc56b; stroke: #5f9e45; stroke-width: 2; }
+.mon-crack { fill: none; stroke: #a47e52; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.mon-stem { fill: none; stroke: #2f9e44; stroke-width: 3; stroke-linecap: round; }
+.mon-stem--dry { stroke: #a3a35c; }
+.mon-leaf { fill: #51cf66; stroke: #2f9e44; stroke-width: 1.2; }
+.mon-leaf--dry { fill: #c9c27a; stroke: #a3a35c; }
+.mon-cal-page { fill: #fff; stroke: #c9d6e0; stroke-width: 2; }
+.mon-cal-head { fill: #e03131; }
+.mon-cal-ring { fill: #5c6b7a; }
+.mon-cal-month { font: 700 20px var(--sans); fill: #fff; letter-spacing: .1em; }
+.mon-cal-day { font: 700 64px var(--sans); fill: var(--ink); }
+.mon-month { stroke-width: 2; }
+.mon-month--may { fill: #e7f5ff; stroke: #a5d8ff; }
+.mon-month--june { fill: #ebfbee; stroke: #b2f2bb; }
+.mon-month-name { font: 700 22px var(--sans); fill: #5c6b7a; letter-spacing: .12em; }
+.mon-zone-late { fill: rgba(224, 49, 49, .1); stroke: #e03131; stroke-width: 2; stroke-dasharray: 7 6; }
+.mon-tick { stroke: #9aa7b6; stroke-width: 1.2; }
+.mon-pointer { stroke: #5c6b7a; stroke-width: 2; stroke-dasharray: 3 4; }
+.mon-up, .mon-down { fill: none; stroke-width: 8; stroke-linecap: round; stroke-dasharray: 14 10; animation: hs-flow-up 1s linear infinite; }
+.mon-up { stroke: #e03131; }
+.mon-up--weak { stroke-width: 5; }
+.mon-down { stroke: #1c7ed6; }
+.mon-flow { fill: none; stroke: #5c6b7a; stroke-width: 6; stroke-linecap: round; stroke-dasharray: 12 10; animation: hs-flow 1s linear infinite; }
+.mon-balloon { stroke: #1c7ed6; stroke-width: 3; }
+.mon-balloon-knot { fill: #1c7ed6; }
+.mon-shine { fill: #fff; opacity: .6; }
+.mon-balloon-h { font-family: var(--sans); font-weight: 700; fill: #1c5fa8; }
+.mon-puff { fill: none; stroke: #4dabf7; stroke-width: 4; stroke-linecap: round; stroke-dasharray: 8 8; animation: hs-flow 1s linear infinite; }
+.mon-lens { fill: rgba(255, 255, 255, .25); stroke: #5c6b7a; stroke-width: 6; }
+.mon-lens-handle { stroke: #8d5524; stroke-width: 12; stroke-linecap: round; }
+.mon-check-bg { fill: #2b8a3e; }
+.mon-check { fill: none; stroke: #fff; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
+
 /* ---------------- REVEAL ---------------- */
 .reveal { opacity: 0; transform: translateY(16px); transition: opacity .7s ease, transform .7s ease; }
 .reveal.is-visible { opacity: 1; transform: none; }
@@ -661,6 +754,14 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
   .story__stage .hs-name { font-size: 20px; }
   .story__stage .hs-ocean { font-size: 34px; }
   .story__stage .hs-small, .story__stage .hs-key-text { font-size: 20px; }
+  .story__stage .mon-label { font-size: 24px; }
+  .story__stage .mon-label--small { font-size: 21px; }
+  .story__stage .mon-tag--minor { display: none; }
+  .story__stage .mon-chip { font-size: 23px; }
+  .story__stage .mon-chip--card { font-size: 20px; }
+  .story__stage .mon-name { font-size: 18px; }
+  .story__stage .mon-ocean { font-size: 20px; }
+  .story__stage .mon-small { font-size: 19px; }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }

@@ -14,6 +14,8 @@ w4-story.html  animated wavenumber-4 story (linked from the wavenumber-4 theme)
 w4-story.js    drawings and animation for the story
 hsp-story.html animated horseshoe salinity story (linked from the Indian Ocean theme)
 hsp-story.js   drawings and animation for the horseshoe story
+onset-story.html animated story of why the monsoon comes late (linked from the Indian Ocean theme)
+onset-story.js   drawings and animation for the monsoon onset story
 data/          data for the interactive pages and the scripts that refresh them
 styles.css     design
 script.js      navigation, publication filter, animated hero background
