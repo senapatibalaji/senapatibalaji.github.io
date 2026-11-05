@@ -77,9 +77,18 @@
   const group = (name, parent = svg) => (groups[name] = el('g', { class: 'w4-layer', 'data-layer': name }, parent));
 
   // ---------- Icons ----------
+  function face(parent, x, y, r) {                               // a friendly face for the clouds and the sun
+    const g = el('g', { transform: `translate(${x},${y})` }, parent);
+    [-1, 1].forEach(s => {
+      el('circle', { cx: s * r * 0.35, cy: -r * 0.12, r: r * 0.11, class: 'w4-eye' }, g);
+      el('circle', { cx: s * r * 0.6, cy: r * 0.16, r: r * 0.13, class: 'w4-blush' }, g);
+    });
+    el('path', { d: `M${-r * 0.32},${r * 0.18}Q0,${r * 0.52} ${r * 0.32},${r * 0.18}`, class: 'w4-mouth', 'stroke-width': r * 0.1 }, g);
+  }
   function cloud(parent, x, y, s = 1, rain = true) {
     const g = el('g', { transform: `translate(${x},${y}) scale(${s})` }, parent);
     el('path', { d: 'M-34,10 a14,14 0 0,1 4,-26 a20,20 0 0,1 36,-6 a15,15 0 0,1 26,12 a12,12 0 0,1 -4,20 Z', class: 'w4-cloud' }, g);
+    face(g, -3, -3, 12);
     if (rain) for (let i = 0; i < 5; i++) el('line', { x1: -22 + i * 11, y1: 18, x2: -26 + i * 11, y2: 28, class: 'w4-rain', style: `animation-delay:${i * 0.17}s` }, g);
     return g;
   }
@@ -91,6 +100,7 @@
       el('line', { x1: Math.cos(a) * 15, y1: Math.sin(a) * 15, x2: Math.cos(a) * 21, y2: Math.sin(a) * 21, class: 'w4-ray' }, rays);
     }
     el('circle', { r: 11, class: 'w4-sun' }, g);
+    face(g, 0, 1, 9);
     if (dry) {
       el('rect', { x: -20, y: 27, width: 40, height: 12, rx: 3, class: 'w4-dry' }, g);
       el('path', { d: 'M-12,27l3,6l-3,6M2,27l-2,5l3,7M13,27l2,6', class: 'w4-crack' }, g);
@@ -158,12 +168,12 @@
     el('text', { x: bx, y: by - 10, class: 'w4-plane-title' }, g, title);
     return g;
   };
-  drawPlane('air', 'w4-plane w4-plane--air', 'Upper atmosphere (about 10 km up)');
-  drawPlane('ocean', 'w4-plane w4-plane--ocean', 'Ocean surface');
+  drawPlane('air', 'w4-plane w4-plane--air', 'High in the sky (about 10 km up)');
+  drawPlane('ocean', 'w4-plane w4-plane--ocean', 'Sea surface');
   const [ex, ey] = P(460, -60, 'ocean');
   el('text', { x: ex, y: ey + 22, class: 'w4-plane-note', 'text-anchor': 'end' }, gPlanes, 'East →');
   const [px, py] = P(100, -60, 'ocean');
-  el('text', { x: px, y: py + 22, class: 'w4-plane-note' }, gPlanes, '10°S (back) to 60°S (front), from 100°E');
+  el('text', { x: px, y: py + 22, class: 'w4-plane-note' }, gPlanes, 'From the tropics (back) to near Antarctica (front)');
 
   // ---------- Trigger: warm water near New Zealand ----------
   const gTrigger = group('trigger');
@@ -179,7 +189,7 @@
   [-14, 0, 14].forEach((dx, i) => el('path', { d: `M${sx + dx},${sy - 12} L${ax + dx},${ay + 26}`, class: 'w4-updraft', 'marker-end': 'url(#w4ArrGreen)', style: `animation-delay:${i * 0.25}s` }, gPlume));
   cloud(gPlume, ax - 4, ay + 70, 1.15, true);
   [[-1, -0.4], [1, -0.4], [-1, 0.5], [1, 0.5]].forEach(([dx, dy]) => arrow(gPlume, [ax + dx * 10, ay + dy * 8], [ax + dx * 52, ay + dy * 26], 'w4-diverge', 'w4ArrNavy'));
-  label(gPlume, ax + 118, ay + 60, 'Heat released in clouds', 'w4-label');
+  label(gPlume, ax + 118, ay + 60, 'Clouds give off heat', 'w4-label');
   label(gPlume, ax + 112, ay - 30, 'Air spreads out high up', 'w4-label');
 
   // ---------- Jet stream, highs and lows ----------
@@ -232,7 +242,7 @@
   WARM.forEach(([lon]) => {
     arrow(gWinds, P(lon, -27, 'ocean'), P(lon, -47, 'ocean'), 'w4-wind w4-wind--warm', 'w4ArrWarm');
     const [x, y] = P(lon, -27, 'ocean');
-    label(gWinds, x + 4, y - 14, 'warm & moist', 'w4-label w4-label--tiny w4-label--warm');
+    label(gWinds, x + 4, y - 14, 'warm & wet', 'w4-label w4-label--tiny w4-label--warm');
     el('path', { d: `M${x + 22},${y + 30} q-4,-6 0,-12`, class: 'w4-vapour w4-vapour--weak' }, gWinds);
   });
   COOL.forEach(([lon]) => {
@@ -241,7 +251,7 @@
     label(gWinds, x, y + 18, 'cool & dry', 'w4-label w4-label--tiny w4-label--cool');
     [0, 1, 2].forEach(i => el('path', { d: `M${x + 18 + i * 9},${y - 28} q-5,-8 0,-16 q5,-8 0,-16`, class: 'w4-vapour', style: `animation-delay:${i * 0.3}s` }, gWinds));
   });
-  { const [x, y] = P(100, -10, 'ocean'); label(gWinds, x + 290, y - 36, 'Wavy lines: evaporation (more where air is cool and dry)', 'w4-label w4-label--small'); }
+  { const [x, y] = P(100, -10, 'ocean'); label(gWinds, x + 290, y - 36, 'Wavy lines: sea water evaporating', 'w4-label w4-label--small'); }
 
   // ---------- Mixed-layer cross-section ----------
   const gColumn = group('column');
@@ -299,16 +309,16 @@
   blob(gImpactOcean, 175, -39, 'ocean', false, 44, 22);
   [[124, -46, 128, -30], [134, -47, 138, -31], [143, -45, 147, -32]].forEach(([lo1, la1, lo2, la2], i) =>
     arrow(gImpactOcean, P(lo1, la1, 'ocean'), P(lo2, la2, 'ocean'), 'w4-moist', 'w4ArrTeal', 0.15).setAttribute('style', `animation-delay:${i * 0.3}s`));
-  { const [x, y] = P(137, -26, 'ocean'); cloud(gImpactOcean, x, y - 26, 0.75, true); label(gImpactOcean, x + 270, y - 64, 'Moist air pushed onto Australia', 'w4-label'); }
+  { const [x, y] = P(137, -26, 'ocean'); cloud(gImpactOcean, x, y - 26, 0.75, true); label(gImpactOcean, x + 270, y - 64, 'Wet air pushed onto Australia', 'w4-label'); }
 
   // ---------- Decadal heartbeat ----------
   const gDecadal = group('decadal');
   { const [x, y] = P(SRC[0], SRC[1], 'ocean'); el('ellipse', { cx: x, cy: y, rx: 64, ry: 32, fill: 'url(#w4Glow)', class: 'w4-pulse-slow' }, gDecadal); }
-  { const [x, y] = P(SRC[0], SRC[1], 'ocean'); label(gDecadal, x + 30, y + 44, 'Leftover warmth from the South Pacific Meridional Mode', 'w4-label w4-label--warm'); }
+  { const [x, y] = P(SRC[0], SRC[1], 'ocean'); label(gDecadal, x + 30, y + 44, 'Leftover warm water', 'w4-label w4-label--warm'); }
   { const [x1, y1] = P(SRC[0], SRC[1], 'ocean'), [, y2] = P(SRC[0], SRC[1], 'air');
     el('path', { d: `M${x1 - 30},${y1 - 20} C${x1 - 120},${y1 - 120} ${x1 - 120},${y2 + 60} ${x1 - 20},${y2 + 30}`, class: 'w4-loop', 'marker-end': 'url(#w4ArrWarm)' }, gDecadal);
     el('path', { d: `M${x1 + 30},${y2 + 30} C${x1 + 120},${y2 + 70} ${x1 + 120},${y1 - 110} ${x1 + 34},${y1 - 22}`, class: 'w4-loop', 'marker-end': 'url(#w4ArrWarm)' }, gDecadal);
-    label(gDecadal, x1 + 160, (y1 + y2) / 2 + 10, 'The chain re-starts, year after year', 'w4-label'); }
+    label(gDecadal, x1 + 160, (y1 + y2) / 2 + 10, 'The chain starts again, year after year', 'w4-label'); }
   [[300, -26, 'rain'], [387, -26, 'rain'], [133, -24, 'dry']].forEach(([lon, lat, kind]) => {
     const [x, y] = P(lon, lat, 'ocean');
     if (kind === 'rain') cloud(gDecadal, x, y - 18, 0.62, true); else sun(gDecadal, x, y - 22, 0.62, true);
@@ -316,30 +326,30 @@
 
   // ---------- Scenes ----------
   const SCENES = [
-    { chapter: 'Meet the pattern', title: 'A ring of eight ocean patches',
-      text: 'Across the Southern Hemisphere, between about 20°S and 55°S, the sea surface sometimes forms a ring of four warm and four cool patches that alternate all the way around the globe. Because the ring holds four waves, it is called the wavenumber-4 pattern. It appears in the atmosphere too, and it shapes rainfall and extremes over the southern continents.',
+    { chapter: 'Meet the pattern', title: 'A ring of warm and cool patches',
+      text: 'Look at the bottom half of the world, all around the South Pole. Sometimes the sea there makes a ring of eight patches: four warm and four cool, taking turns all the way around, like beads on a necklace. Because the ring has four waves, scientists call it the wavenumber-4 pattern. It changes the rain on the southern continents.',
       layers: ['polar'] },
-    { chapter: 'Origin', title: 'It starts with warm water near New Zealand',
-      text: 'Around November, unusually warm water in the southwestern subtropical Pacific, near New Zealand, heats the air above it. Keep an eye on the jet stream in the upper atmosphere: it is about to be disturbed.',
+    { chapter: 'How it starts', title: 'It starts with warm water near New Zealand',
+      text: 'It all begins around November. Some sea water near New Zealand gets warmer than usual, and it warms the air above it. Now keep an eye on the jet stream, a fast river of wind high up in the sky. Something is about to happen to it!',
       layers: ['planes', 'trigger', 'jet'], jet: () => [0, 0] },
-    { chapter: 'Origin', title: 'Rising air, clouds and rain',
-      text: 'The warm, light air rises. As it climbs and cools, its moisture condenses into cloud and rain, releasing heat. This heating makes air spread outward high in the atmosphere, and the stretching of the air column below gives the jet stream a kick.',
+    { chapter: 'How it starts', title: 'Warm air rises and makes clouds',
+      text: 'Warm air is light, so it rises. As it goes up, it cools and makes clouds and rain, and the clouds give off heat. High in the sky, the air spreads out in all directions, and this gives the jet stream a push.',
       layers: ['planes', 'trigger', 'plume', 'jet'], jet: () => [0, 0] },
-    { chapter: 'Origin', title: 'The jet stream starts to wobble',
-      text: 'The kick pushes the jet stream towards the pole. Earth’s rotation pulls it back towards the equator, it overshoots, and an undulation is born: a Rossby wave. Earth’s rotation acts as the restoring force.',
+    { chapter: 'How it starts', title: 'The jet stream starts to wiggle',
+      text: 'The push moves the jet stream towards the South Pole. But the spinning Earth pulls it back towards the equator. It swings too far, then back again, like a skipping rope being wiggled. That wiggle is a giant wave of wind, called a Rossby wave.',
       layers: ['planes', 'trigger', 'plume', 'jet'], jet: t => [Math.min(75, 12 + t * 16), 1] },
-    { chapter: 'Origin', title: 'Trapped in the jet, the wave circles the globe',
-      text: 'The southern subtropical jet acts as a waveguide. Trapped inside it, the disturbance travels eastward all the way around the hemisphere. Within about 15–25 days, by early December, four highs and four lows sit around the globe: the atmospheric wavenumber-4 pattern.',
+    { chapter: 'How it starts', title: 'The wave goes all the way around',
+      text: 'The jet stream works like a tube that keeps the wave inside it. So the wave travels east, all the way around the bottom half of the world. In about 15 to 25 days, by early December, there is a ring of four highs and four lows around the globe.',
       layers: ['planes', 'jet', 'day'], jet: t => [Math.min(400, t * 36), 1],
-      tick: t => { const f = t * 36; dayText.textContent = f < 360 ? `Day ${Math.round(f / 360 * 20)}` : 'Early December: pattern in place'; } },
-    { chapter: 'Origin', title: 'The same pattern from top to bottom',
-      text: 'The pattern is quasi-barotropic: its highs and lows reach from the upper atmosphere all the way down to the sea surface. So the winds blowing over the ocean change too, and that is where the ocean joins the story.',
+      tick: t => { const f = t * 36; dayText.textContent = f < 360 ? `Day ${Math.round(f / 360 * 20)}` : 'Early December: the ring is ready'; } },
+    { chapter: 'How it starts', title: 'From the sky down to the sea',
+      text: 'These highs and lows reach from high in the sky all the way down to the sea. So the winds over the sea change too, and now the ocean joins the story.',
       layers: ['planes', 'jet', 'baro'], jet: () => [400, 1] },
-    { chapter: 'Ocean response', title: 'Winds change how much the sea evaporates',
-      text: 'Between the highs and lows, winds blow north or south. Winds from the equator bring warm, moist air, so less water evaporates and the sea loses less heat. Winds from the pole bring cool, dry air, which makes more water evaporate.',
+    { chapter: 'The ocean joins in', title: 'Winds change how much the sea evaporates',
+      text: 'Between the highs and lows, winds blow north or south. Winds from the warm equator bring warm, wet air, so less sea water evaporates and the sea keeps its heat. Winds from the icy South Pole bring cool, dry air, so more water evaporates and the sea loses heat.',
       layers: ['planes', 'jet', 'baro', 'winds'], jet: () => [400, 1] },
-    { chapter: 'Ocean response', title: 'Thin layers warm, thick layers stay cool',
-      text: 'Less evaporation leaves lighter surface water, so the well-mixed layer at the top of the ocean stays shallow, and summer sunshine heats this thin layer quickly. More evaporation makes the surface water heavier; it mixes downward and the layer deepens, spreading the same sunshine through more water, so it stays cooler.',
+    { chapter: 'The ocean joins in', title: 'A thin top layer warms fast',
+      text: 'Less evaporation keeps the top of the sea light, so the warm top layer stays thin, and the summer sun warms it quickly. More evaporation makes the top water heavier, so it sinks and mixes deeper. Then the same sunshine has to warm much more water, so it stays cool, just like a deep pond warms more slowly than a shallow puddle.',
       layers: ['column'],
       tick: t => cols.forEach(c => {
         const f = clamp(t / 4);
@@ -347,8 +357,8 @@
         const h = c.shallow ? lerp(26, 56, f) : lerp(26, 32, f);
         c.fill.setAttribute('height', h); c.fill.setAttribute('y', 66 - h);
       }) },
-    { chapter: 'Ocean response', title: 'The ocean pattern peaks, then fades',
-      text: 'By December–February the four warm and four cool patches form the SST wavenumber-4 pattern. The atmosphere cannot hold its pattern for long, but the ocean remembers: mixed-layer feedbacks keep the SST pattern going until about April–May, when the forcing has gone, evaporation changes reverse and cooler water mixed up from below finally erases it.',
+    { chapter: 'The ocean joins in', title: 'The sea remembers',
+      text: 'By December to February, the sea has its own ring of four warm and four cool patches. The winds high up soon calm down, but the sea remembers! Its patches last until about April or May. Then the winds change, cooler water mixes up from below, and the patches fade away.',
       layers: ['planes', 'jet', 'sst', 'timeline'],
       tick: t => {
         const m = reduceMotion ? 3 : (t % 13) / 13 * 6.4;
@@ -357,19 +367,19 @@
         sstBlobs.forEach(b => { b.style.opacity = s; });
         drawJet(400, a);
         tlDot.setAttribute('cx', lerp(tlX(0), tlX(6), mm / 6));
-        tlNote.textContent = mm < 1 ? 'atmosphere first' : mm < 3.5 ? 'SST pattern grows' : mm < 5.5 ? 'ocean memory' : 'pattern fades';
+        tlNote.textContent = mm < 1 ? 'winds first' : mm < 3.5 ? 'sea patches grow' : mm < 5.5 ? 'the sea remembers' : 'patches fade';
       } },
-    { chapter: 'Impacts', title: 'Rain and drought through the air',
-      text: 'The highs and lows push air upward in some places and downward in others. Rising air brings cloud and rain; sinking air brings dry spells. This shifts summer rainfall over parts of South America, Australia and southern Africa, with wetter and drier regions side by side.',
+    { chapter: 'What it does', title: 'Rain in some places, dry in others',
+      text: 'The highs and lows push air up in some places and down in others. Where air goes up, clouds and rain grow. Where air sinks, it stays dry and sunny. So in summer, some parts of South America, Australia and southern Africa get wetter, and others get drier.',
       layers: ['planes', 'jet', 'impactAir'], jet: () => [400, 1] },
-    { chapter: 'Impacts', title: 'Rain fed by the ocean',
-      text: 'The warm and cool patches also steer moisture. Warm water south of Australia drives winds that carry moist air onto the continent, where it converges and falls as rain. This links the SST pattern to Australian rainfall from year to year.',
+    { chapter: 'What it does', title: 'Rain carried from the sea',
+      text: 'The warm and cool patches also push wet air around. Warm water south of Australia makes winds that carry wet air from the sea onto the land, where it falls as rain. That is why the pattern can change Australia’s rain from one year to the next.',
       layers: ['planes', 'impactOcean'] },
-    { chapter: 'Decadal', title: 'A decadal heartbeat',
-      text: 'The pattern also varies from decade to decade. When the South Pacific Meridional Mode fades, it leaves warm or cool water behind in the southwestern subtropical Pacific. These leftovers keep re-triggering the same chain, so some decades have more positive events and others more negative ones, shifting rainfall over the southern continents for years at a time: in one phase, South America and southern Africa get wetter while Australia gets drier.',
+    { chapter: 'Over the years', title: 'A heartbeat over the decades',
+      text: 'The pattern also changes from one decade to the next. A slow change in the South Pacific Ocean, called the South Pacific Meridional Mode, can leave warm or cool water behind near New Zealand. That leftover water starts the same chain again and again, so in some decades one kind of ring happens more often. Then South America and southern Africa can get wetter for years, while Australia gets drier.',
       layers: ['planes', 'decadal', 'sst'], tick: () => sstBlobs.forEach(b => { b.style.opacity = 0.35; }) },
     { chapter: 'Read more', title: 'Explore the research',
-      html: 'This story summarises four papers: <a href="https://doi.org/10.1038/s41598-020-80492-x" target="_blank" rel="noopener">the SST pattern (Scientific Reports, 2021)</a>, <a href="https://doi.org/10.1007/s00382-021-06040-z" target="_blank" rel="noopener">its atmospheric origin (Climate Dynamics, 2022)</a>, <a href="https://doi.org/10.1029/2022GL099046" target="_blank" rel="noopener">its decadal variability (GRL, 2022)</a> and <a href="https://doi.org/10.1029/2023JC020801" target="_blank" rel="noopener">its life cycle in a coupled model (JGR-Oceans, 2024)</a>. There is also a <a href="https://blogs.reading.ac.uk/weather-and-climate-at-reading/2023/wavenumber-4-in-the-southern-hemisphere-how-does-it-generate-why-does-it-matter/" target="_blank" rel="noopener">blog post</a>, and the <a href="sintex-f2.html">simulations and models</a> behind the work.',
+      html: 'This story is based on four papers: <a href="https://doi.org/10.1038/s41598-020-80492-x" target="_blank" rel="noopener">the SST pattern (Scientific Reports, 2021)</a>, <a href="https://doi.org/10.1007/s00382-021-06040-z" target="_blank" rel="noopener">its atmospheric origin (Climate Dynamics, 2022)</a>, <a href="https://doi.org/10.1029/2022GL099046" target="_blank" rel="noopener">its decadal variability (GRL, 2022)</a> and <a href="https://doi.org/10.1029/2023JC020801" target="_blank" rel="noopener">its life cycle in a coupled model (JGR-Oceans, 2024)</a>. There is also a <a href="https://blogs.reading.ac.uk/weather-and-climate-at-reading/2023/wavenumber-4-in-the-southern-hemisphere-how-does-it-generate-why-does-it-matter/" target="_blank" rel="noopener">blog post</a>, and the <a href="sintex-f2.html">simulations and models</a> behind the work.',
       layers: ['polar'] },
   ];
 
