@@ -533,7 +533,7 @@
         calChip.set(STEPS.find(([until]) => d < until)[1]);
       } },
     { chapter: 'Why it matters', title: 'Why does it matter?',
-      html: 'Knowing why the monsoon comes late can help scientists warn farmers early, so they can plan when to plant. This story comes from <strong>Vaishnavi Wadhai</strong>’s PhD research at IIT Kharagpur: <a href="https://doi.org/10.1029/2025GL120701" target="_blank" rel="noopener">Wadhai, Senapati, Dash &amp; Behera (2026), Geophysical Research Letters</a>. You can also explore <a href="monsoon.html">monsoon rainfall</a>, or the stories of <a href="hsp-story.html">the horseshoe in the Indian Ocean</a> and <a href="w4-story.html">the wavenumber-4 pattern</a>.',
+      html: 'Knowing why the monsoon comes late can help scientists warn farmers early, so they can plan when to plant. It also helps governments get ready: planning crops and water for a late start, and preparing people for heatwaves, which can last longer when the rain comes late. This story comes from <strong>Vaishnavi Wadhai</strong>’s PhD research at IIT Kharagpur: <a href="https://doi.org/10.1029/2025GL120701" target="_blank" rel="noopener">Wadhai, Senapati, Dash &amp; Behera (2026), Geophysical Research Letters</a>. You can also explore <a href="monsoon.html">monsoon rainfall</a>, or the stories of <a href="hsp-story.html">the horseshoe in the Indian Ocean</a> and <a href="w4-story.html">the wavenumber-4 pattern</a>.',
       layers: ['farmRain'] },
   ];
 
