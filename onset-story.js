@@ -466,7 +466,7 @@
   // ---------- Scenes ----------
   const SCENES = [
     { chapter: 'Waiting for rain', title: 'India waits for the monsoon',
-      text: 'Every summer, India waits for the monsoon, the season of big rains. Farmers need the rain to plant their seeds. The first monsoon rain usually reaches Kerala, at the southern tip of India, around 1 June.',
+      text: 'After the scorching heat and heatwaves of April and May, everyone in India waits for the monsoon, the season of big rains. Its cool rain brings relief from the heat, and farmers need it to plant their seeds. The first monsoon rain usually reaches Kerala, at the southern tip of India, around 1 June.',
       layers: ['farmDry'] },
     { chapter: 'Waiting for rain', title: 'Sometimes the rain is late',
       text: 'The monsoon doesn’t always keep its date. It can come as early as 7 May or as late as 22 June. Between 1979 and 2023, it came really late in 12 years. When the rain is late, planting is late too, and millions of people have to wait and worry.',
